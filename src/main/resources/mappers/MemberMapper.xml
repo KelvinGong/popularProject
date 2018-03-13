@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.plc.dao.MemberMapper" >
+  <resultMap id="BaseResultMap" type="com.plc.pojo.Member" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="member_code" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="mem_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="name_eng" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="birthday" jdbcType="DATE" javaType="java.util.Date" />
+      <arg column="gender" jdbcType="CHAR" javaType="java.lang.String" />
+      <arg column="name_parents" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="phone" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="wechat" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="address" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="centre" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="refer_from" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="marketing" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="remarks" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, member_code, mem_name, name_eng, birthday, gender, name_parents, phone, wechat, 
+    address, centre, refer_from, marketing, remarks, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from plc_member
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from plc_member
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.plc.pojo.Member" >
+    insert into plc_member (id, member_code, mem_name, 
+      name_eng, birthday, gender, 
+      name_parents, phone, wechat, 
+      address, centre, refer_from, 
+      marketing, remarks, create_time, 
+      update_time)
+    values (#{id,jdbcType=INTEGER}, #{memberCode,jdbcType=VARCHAR}, #{memName,jdbcType=VARCHAR}, 
+      #{nameEng,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, #{gender,jdbcType=CHAR}, 
+      #{nameParents,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{wechat,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{centre,jdbcType=VARCHAR}, #{referFrom,jdbcType=VARCHAR}, 
+      #{marketing,jdbcType=INTEGER}, #{remarks,jdbcType=VARCHAR}, now(),
+     now())
+  </insert>
+  <insert id="insertSelective" parameterType="com.plc.pojo.Member" >
+    insert into plc_member
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberCode != null" >
+        member_code,
+      </if>
+      <if test="memName != null" >
+        mem_name,
+      </if>
+      <if test="nameEng != null" >
+        name_eng,
+      </if>
+      <if test="birthday != null" >
+        birthday,
+      </if>
+      <if test="gender != null" >
+        gender,
+      </if>
+      <if test="nameParents != null" >
+        name_parents,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="wechat != null" >
+        wechat,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="centre != null" >
+        centre,
+      </if>
+      <if test="referFrom != null" >
+        refer_from,
+      </if>
+      <if test="marketing != null" >
+        marketing,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="memberCode != null" >
+        #{memberCode,jdbcType=VARCHAR},
+      </if>
+      <if test="memName != null" >
+        #{memName,jdbcType=VARCHAR},
+      </if>
+      <if test="nameEng != null" >
+        #{nameEng,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=DATE},
+      </if>
+      <if test="gender != null" >
+        #{gender,jdbcType=CHAR},
+      </if>
+      <if test="nameParents != null" >
+        #{nameParents,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="wechat != null" >
+        #{wechat,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="centre != null" >
+        #{centre,jdbcType=VARCHAR},
+      </if>
+      <if test="referFrom != null" >
+        #{referFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="marketing != null" >
+        #{marketing,jdbcType=INTEGER},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        now(),
+      </if>
+      <if test="updateTime != null" >
+        now(),
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.plc.pojo.Member" >
+    update plc_member
+    <set >
+      <if test="memberCode != null" >
+        member_code = #{memberCode,jdbcType=VARCHAR},
+      </if>
+      <if test="memName != null" >
+        mem_name = #{memName,jdbcType=VARCHAR},
+      </if>
+      <if test="nameEng != null" >
+        name_eng = #{nameEng,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender,jdbcType=CHAR},
+      </if>
+      <if test="nameParents != null" >
+        name_parents = #{nameParents,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="wechat != null" >
+        wechat = #{wechat,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="centre != null" >
+        centre = #{centre,jdbcType=VARCHAR},
+      </if>
+      <if test="referFrom != null" >
+        refer_from = #{referFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="marketing != null" >
+        marketing = #{marketing,jdbcType=INTEGER},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = now(),
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.plc.pojo.Member" >
+    update plc_member
+    set member_code = #{memberCode,jdbcType=VARCHAR},
+      mem_name = #{memName,jdbcType=VARCHAR},
+      name_eng = #{nameEng,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=DATE},
+      gender = #{gender,jdbcType=CHAR},
+      name_parents = #{nameParents,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      wechat = #{wechat,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      centre = #{centre,jdbcType=VARCHAR},
+      refer_from = #{referFrom,jdbcType=VARCHAR},
+      marketing = #{marketing,jdbcType=INTEGER},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = now()
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

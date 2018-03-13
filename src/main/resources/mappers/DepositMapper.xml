@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.plc.dao.DepositMapper" >
+  <resultMap id="BaseResultMap" type="com.plc.pojo.Deposit" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="pay_date" jdbcType="DATE" javaType="java.util.Date" />
+      <arg column="recept_pos_code" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="mem_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="name_eng" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="course_code" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="price" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="cc1" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="cc2" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="name_parents" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="phone" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="wechat" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="remarks" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="is_active" jdbcType="BIT" javaType="java.lang.Boolean" />
+      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, pay_date, recept_pos_code, mem_name, name_eng, course_code, price, cc1, cc2, 
+    name_parents, phone, wechat, remarks, is_active, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from plc_deposit
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from plc_deposit
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.plc.pojo.Deposit" >
+    insert into plc_deposit (id, pay_date, recept_pos_code, 
+      mem_name, name_eng, course_code, 
+      price, cc1, cc2, name_parents, 
+      phone, wechat, remarks, 
+      is_active, create_time, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{payDate,jdbcType=DATE}, #{receptPosCode,jdbcType=VARCHAR}, 
+      #{memName,jdbcType=VARCHAR}, #{nameEng,jdbcType=VARCHAR}, #{courseCode,jdbcType=VARCHAR}, 
+      #{price,jdbcType=INTEGER}, #{cc1,jdbcType=INTEGER}, #{cc2,jdbcType=INTEGER}, #{nameParents,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{wechat,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, 
+      #{isActive,jdbcType=BIT}, now(), now()
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.plc.pojo.Deposit" >
+    insert into plc_deposit
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="payDate != null" >
+        pay_date,
+      </if>
+      <if test="receptPosCode != null" >
+        recept_pos_code,
+      </if>
+      <if test="memName != null" >
+        mem_name,
+      </if>
+      <if test="nameEng != null" >
+        name_eng,
+      </if>
+      <if test="courseCode != null" >
+        course_code,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="cc1 != null" >
+        cc1,
+      </if>
+      <if test="cc2 != null" >
+        cc2,
+      </if>
+      <if test="nameParents != null" >
+        name_parents,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="wechat != null" >
+        wechat,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="isActive != null" >
+        is_active,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="payDate != null" >
+        #{payDate,jdbcType=DATE},
+      </if>
+      <if test="receptPosCode != null" >
+        #{receptPosCode,jdbcType=VARCHAR},
+      </if>
+      <if test="memName != null" >
+        #{memName,jdbcType=VARCHAR},
+      </if>
+      <if test="nameEng != null" >
+        #{nameEng,jdbcType=VARCHAR},
+      </if>
+      <if test="courseCode != null" >
+        #{courseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=INTEGER},
+      </if>
+      <if test="cc1 != null" >
+        #{cc1,jdbcType=INTEGER},
+      </if>
+      <if test="cc2 != null" >
+        #{cc2,jdbcType=INTEGER},
+      </if>
+      <if test="nameParents != null" >
+        #{nameParents,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="wechat != null" >
+        #{wechat,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="isActive != null" >
+        #{isActive,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        now(),
+      </if>
+      <if test="updateTime != null" >
+        now(),
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.plc.pojo.Deposit" >
+    update plc_deposit
+    <set >
+      <if test="payDate != null" >
+        pay_date = #{payDate,jdbcType=DATE},
+      </if>
+      <if test="receptPosCode != null" >
+        recept_pos_code = #{receptPosCode,jdbcType=VARCHAR},
+      </if>
+      <if test="memName != null" >
+        mem_name = #{memName,jdbcType=VARCHAR},
+      </if>
+      <if test="nameEng != null" >
+        name_eng = #{nameEng,jdbcType=VARCHAR},
+      </if>
+      <if test="courseCode != null" >
+        course_code = #{courseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=INTEGER},
+      </if>
+      <if test="cc1 != null" >
+        cc1 = #{cc1,jdbcType=INTEGER},
+      </if>
+      <if test="cc2 != null" >
+        cc2 = #{cc2,jdbcType=INTEGER},
+      </if>
+      <if test="nameParents != null" >
+        name_parents = #{nameParents,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="wechat != null" >
+        wechat = #{wechat,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="isActive != null" >
+        is_active = #{isActive,jdbcType=BIT},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = now(),
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.plc.pojo.Deposit" >
+    update plc_deposit
+    set pay_date = #{payDate,jdbcType=DATE},
+      recept_pos_code = #{receptPosCode,jdbcType=VARCHAR},
+      mem_name = #{memName,jdbcType=VARCHAR},
+      name_eng = #{nameEng,jdbcType=VARCHAR},
+      course_code = #{courseCode,jdbcType=VARCHAR},
+      price = #{price,jdbcType=INTEGER},
+      cc1 = #{cc1,jdbcType=INTEGER},
+      cc2 = #{cc2,jdbcType=INTEGER},
+      name_parents = #{nameParents,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      wechat = #{wechat,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      is_active = #{isActive,jdbcType=BIT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = now()
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

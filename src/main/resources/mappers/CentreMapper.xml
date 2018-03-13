@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.plc.dao.CentreMapper" >
+  <resultMap id="BaseResultMap" type="com.plc.pojo.Centre" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="centre_code" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="centre_name" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="centre_region" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="address" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, centre_code, centre_name, centre_region, address, status, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from plc_centre
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from plc_centre
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.plc.pojo.Centre" >
+    insert into plc_centre (id, centre_code, centre_name, 
+      centre_region, address, status, 
+      create_time, update_time)
+    values (#{id,jdbcType=INTEGER}, #{centreCode,jdbcType=VARCHAR}, #{centreName,jdbcType=VARCHAR}, 
+      #{centreRegion,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      now(), now())
+  </insert>
+  <insert id="insertSelective" parameterType="com.plc.pojo.Centre" >
+    insert into plc_centre
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="centreCode != null" >
+        centre_code,
+      </if>
+      <if test="centreName != null" >
+        centre_name,
+      </if>
+      <if test="centreRegion != null" >
+        centre_region,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="centreCode != null" >
+        #{centreCode,jdbcType=VARCHAR},
+      </if>
+      <if test="centreName != null" >
+        #{centreName,jdbcType=VARCHAR},
+      </if>
+      <if test="centreRegion != null" >
+        #{centreRegion,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        now(),
+      </if>
+      <if test="updateTime != null" >
+        now(),
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.plc.pojo.Centre" >
+    update plc_centre
+    <set >
+      <if test="centreCode != null" >
+        centre_code = #{centreCode,jdbcType=VARCHAR},
+      </if>
+      <if test="centreName != null" >
+        centre_name = #{centreName,jdbcType=VARCHAR},
+      </if>
+      <if test="centreRegion != null" >
+        centre_region = #{centreRegion,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = now(),
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.plc.pojo.Centre" >
+    update plc_centre
+    set centre_code = #{centreCode,jdbcType=VARCHAR},
+      centre_name = #{centreName,jdbcType=VARCHAR},
+      centre_region = #{centreRegion,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = now()
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

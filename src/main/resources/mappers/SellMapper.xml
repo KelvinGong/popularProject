@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.plc.dao.SellMapper" >
+  <resultMap id="BaseResultMap" type="com.plc.pojo.Sell" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="ctr_code" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="pay_date" jdbcType="DATE" javaType="java.util.Date" />
+      <arg column="member_code" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="contract_code" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="recept_pos_code" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="course_code" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="price" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="status" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="class_code" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="is_renewal" jdbcType="BIT" javaType="java.lang.Boolean" />
+      <arg column="is_short" jdbcType="BIT" javaType="java.lang.Boolean" />
+      <arg column="firstclass_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="day_of_week" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="cc1" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="cc2" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="ei" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="ta" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="ii" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="remarks" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="pause_date" jdbcType="DATE" javaType="java.util.Date" />
+      <arg column="graduate_date" jdbcType="DATE" javaType="java.util.Date" />
+      <arg column="refund_date" jdbcType="DATE" javaType="java.util.Date" />
+      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, ctr_code, pay_date, member_code, contract_code, recept_pos_code, course_code, 
+    price, status, class_code, is_renewal, is_short, firstclass_time, day_of_week, cc1, 
+    cc2, ei, ta, ii, remarks, pause_date, graduate_date, refund_date, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from plc_sell
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from plc_sell
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.plc.pojo.Sell" >
+    insert into plc_sell (id, ctr_code, pay_date, 
+      member_code, contract_code, recept_pos_code, 
+      course_code, price, status, 
+      class_code, is_renewal, is_short, 
+      firstclass_time, day_of_week, cc1, 
+      cc2, ei, ta, ii, 
+      remarks, pause_date, graduate_date, 
+      refund_date, create_time, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{ctrCode,jdbcType=VARCHAR}, #{payDate,jdbcType=DATE}, 
+      #{memberCode,jdbcType=VARCHAR}, #{contractCode,jdbcType=VARCHAR}, #{receptPosCode,jdbcType=VARCHAR}, 
+      #{courseCode,jdbcType=VARCHAR}, #{price,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+      #{classCode,jdbcType=VARCHAR}, #{isRenewal,jdbcType=BIT}, #{isShort,jdbcType=BIT}, 
+      #{firstclassTime,jdbcType=TIMESTAMP}, #{dayOfWeek,jdbcType=INTEGER}, #{cc1,jdbcType=INTEGER}, 
+      #{cc2,jdbcType=INTEGER}, #{ei,jdbcType=INTEGER}, #{ta,jdbcType=INTEGER}, #{ii,jdbcType=INTEGER}, 
+      #{remarks,jdbcType=VARCHAR}, #{pauseDate,jdbcType=DATE}, #{graduateDate,jdbcType=DATE}, 
+      #{refundDate,jdbcType=DATE}, now(), now()
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.plc.pojo.Sell" >
+    insert into plc_sell
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="ctrCode != null" >
+        ctr_code,
+      </if>
+      <if test="payDate != null" >
+        pay_date,
+      </if>
+      <if test="memberCode != null" >
+        member_code,
+      </if>
+      <if test="contractCode != null" >
+        contract_code,
+      </if>
+      <if test="receptPosCode != null" >
+        recept_pos_code,
+      </if>
+      <if test="courseCode != null" >
+        course_code,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="classCode != null" >
+        class_code,
+      </if>
+      <if test="isRenewal != null" >
+        is_renewal,
+      </if>
+      <if test="isShort != null" >
+        is_short,
+      </if>
+      <if test="firstclassTime != null" >
+        firstclass_time,
+      </if>
+      <if test="dayOfWeek != null" >
+        day_of_week,
+      </if>
+      <if test="cc1 != null" >
+        cc1,
+      </if>
+      <if test="cc2 != null" >
+        cc2,
+      </if>
+      <if test="ei != null" >
+        ei,
+      </if>
+      <if test="ta != null" >
+        ta,
+      </if>
+      <if test="ii != null" >
+        ii,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="pauseDate != null" >
+        pause_date,
+      </if>
+      <if test="graduateDate != null" >
+        graduate_date,
+      </if>
+      <if test="refundDate != null" >
+        refund_date,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="ctrCode != null" >
+        #{ctrCode,jdbcType=VARCHAR},
+      </if>
+      <if test="payDate != null" >
+        #{payDate,jdbcType=DATE},
+      </if>
+      <if test="memberCode != null" >
+        #{memberCode,jdbcType=VARCHAR},
+      </if>
+      <if test="contractCode != null" >
+        #{contractCode,jdbcType=VARCHAR},
+      </if>
+      <if test="receptPosCode != null" >
+        #{receptPosCode,jdbcType=VARCHAR},
+      </if>
+      <if test="courseCode != null" >
+        #{courseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="classCode != null" >
+        #{classCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isRenewal != null" >
+        #{isRenewal,jdbcType=BIT},
+      </if>
+      <if test="isShort != null" >
+        #{isShort,jdbcType=BIT},
+      </if>
+      <if test="firstclassTime != null" >
+        #{firstclassTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dayOfWeek != null" >
+        #{dayOfWeek,jdbcType=INTEGER},
+      </if>
+      <if test="cc1 != null" >
+        #{cc1,jdbcType=INTEGER},
+      </if>
+      <if test="cc2 != null" >
+        #{cc2,jdbcType=INTEGER},
+      </if>
+      <if test="ei != null" >
+        #{ei,jdbcType=INTEGER},
+      </if>
+      <if test="ta != null" >
+        #{ta,jdbcType=INTEGER},
+      </if>
+      <if test="ii != null" >
+        #{ii,jdbcType=INTEGER},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="pauseDate != null" >
+        #{pauseDate,jdbcType=DATE},
+      </if>
+      <if test="graduateDate != null" >
+        #{graduateDate,jdbcType=DATE},
+      </if>
+      <if test="refundDate != null" >
+        #{refundDate,jdbcType=DATE},
+      </if>
+      <if test="createTime != null" >
+        now(),
+      </if>
+      <if test="updateTime != null" >
+        now(),
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.plc.pojo.Sell" >
+    update plc_sell
+    <set >
+      <if test="ctrCode != null" >
+        ctr_code = #{ctrCode,jdbcType=VARCHAR},
+      </if>
+      <if test="payDate != null" >
+        pay_date = #{payDate,jdbcType=DATE},
+      </if>
+      <if test="memberCode != null" >
+        member_code = #{memberCode,jdbcType=VARCHAR},
+      </if>
+      <if test="contractCode != null" >
+        contract_code = #{contractCode,jdbcType=VARCHAR},
+      </if>
+      <if test="receptPosCode != null" >
+        recept_pos_code = #{receptPosCode,jdbcType=VARCHAR},
+      </if>
+      <if test="courseCode != null" >
+        course_code = #{courseCode,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="classCode != null" >
+        class_code = #{classCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isRenewal != null" >
+        is_renewal = #{isRenewal,jdbcType=BIT},
+      </if>
+      <if test="isShort != null" >
+        is_short = #{isShort,jdbcType=BIT},
+      </if>
+      <if test="firstclassTime != null" >
+        firstclass_time = #{firstclassTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dayOfWeek != null" >
+        day_of_week = #{dayOfWeek,jdbcType=INTEGER},
+      </if>
+      <if test="cc1 != null" >
+        cc1 = #{cc1,jdbcType=INTEGER},
+      </if>
+      <if test="cc2 != null" >
+        cc2 = #{cc2,jdbcType=INTEGER},
+      </if>
+      <if test="ei != null" >
+        ei = #{ei,jdbcType=INTEGER},
+      </if>
+      <if test="ta != null" >
+        ta = #{ta,jdbcType=INTEGER},
+      </if>
+      <if test="ii != null" >
+        ii = #{ii,jdbcType=INTEGER},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="pauseDate != null" >
+        pause_date = #{pauseDate,jdbcType=DATE},
+      </if>
+      <if test="graduateDate != null" >
+        graduate_date = #{graduateDate,jdbcType=DATE},
+      </if>
+      <if test="refundDate != null" >
+        refund_date = #{refundDate,jdbcType=DATE},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = now(),
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.plc.pojo.Sell" >
+    update plc_sell
+    set ctr_code = #{ctrCode,jdbcType=VARCHAR},
+      pay_date = #{payDate,jdbcType=DATE},
+      member_code = #{memberCode,jdbcType=VARCHAR},
+      contract_code = #{contractCode,jdbcType=VARCHAR},
+      recept_pos_code = #{receptPosCode,jdbcType=VARCHAR},
+      course_code = #{courseCode,jdbcType=VARCHAR},
+      price = #{price,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      class_code = #{classCode,jdbcType=VARCHAR},
+      is_renewal = #{isRenewal,jdbcType=BIT},
+      is_short = #{isShort,jdbcType=BIT},
+      firstclass_time = #{firstclassTime,jdbcType=TIMESTAMP},
+      day_of_week = #{dayOfWeek,jdbcType=INTEGER},
+      cc1 = #{cc1,jdbcType=INTEGER},
+      cc2 = #{cc2,jdbcType=INTEGER},
+      ei = #{ei,jdbcType=INTEGER},
+      ta = #{ta,jdbcType=INTEGER},
+      ii = #{ii,jdbcType=INTEGER},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      pause_date = #{pauseDate,jdbcType=DATE},
+      graduate_date = #{graduateDate,jdbcType=DATE},
+      refund_date = #{refundDate,jdbcType=DATE},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = now()
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
