@@ -21,7 +21,7 @@ public class User {
 
     private String answer;
 
-    private String centre;
+    private Integer centre;
 
     private Integer role;
 
@@ -29,7 +29,7 @@ public class User {
 
     private Date updateTime;
 
-    public User(Integer id, String username, String password, String staffName, String workCode, String email, String phone, String question, String answer, String centre, Integer role, Date createTime, Date updateTime) {
+    public User(Integer id, String username, String password, String staffName, String workCode, String email, String phone, String question, String answer, Integer centre, Integer role, Date createTime, Date updateTime) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -121,12 +121,12 @@ public class User {
         this.answer = answer == null ? null : answer.trim();
     }
 
-    public String getCentre() {
+    public Integer getCentre() {
         return centre;
     }
 
-    public void setCentre(String centre) {
-        this.centre = centre == null ? null : centre.trim();
+    public void setCentre(Integer centre) {
+        this.centre = centre ;
     }
 
     public Integer getRole() {

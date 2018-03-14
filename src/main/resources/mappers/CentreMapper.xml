@@ -127,4 +127,21 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectList" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List"/>
+    from plc_centre
+    ORDER BY id asc
+  </select>
+  <select id="selectActiveList" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    from plc_centre
+    WHERE status = 1
+    ORDER BY id asc
+  </select>
+  <select id="checkCtrCode" resultType="int" parameterType="string" >
+    select count(1) from plc_centre
+    where centre_code = #{centreCode}
+  </select>
 </mapper>
