@@ -1,5 +1,6 @@
 package com.plc.service;
 
+import com.github.pagehelper.PageInfo;
 import com.plc.common.ServerResponse;
 import com.plc.pojo.User;
 
@@ -27,4 +28,8 @@ public interface IUserService {
     ServerResponse<User> getInformation(Integer userId);
 
     ServerResponse checkAdminRole(User user);
+
+    ServerResponse<PageInfo> getInformationList(int pageNum, int pageSize);
+
+    ServerResponse<String> resetPasswordByAdmin(String passwordNew,User user);
 }

@@ -1,5 +1,7 @@
 package com.plc.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.plc.common.Const;
 import com.plc.common.ServerResponse;
 import com.plc.common.TokenCache;
@@ -11,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.jws.soap.SOAPBinding;
+import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -152,20 +157,35 @@ public class UserServiceImpl implements IUserService {
         return ServerResponse.createByErrorMessage("密码更新失败");
     }
 
+    public ServerResponse<String> resetPasswordByAdmin(String passwordNew,User user){
+        //防止横向越权,要校验一下这个用户的旧密码,一定要指定是这个用户.因为我们会查询一个count(1),如果不指定id,那么结果就是true啦count>0;
+
+        user.setPassword(MD5Util.MD5EncodeUtf8(passwordNew));
+        int updateCount = userMapper.updateByPrimaryKeySelective(user);
+        if(updateCount > 0){
+            return ServerResponse.createBySuccessMessage("密码更新成功");
+        }
+        return ServerResponse.createByErrorMessage("密码更新失败");
+    }
+
 
     public ServerResponse<User> updateInformation(User user){
         //username是不能被更新的
         //email也要进行一个校验,校验新的email是不是已经存在,并且存在的email如果相同的话,不能是我们当前的这个用户的.
         User updateUser = new User();
         updateUser.setId(user.getId());
+        updateUser.setStaffName(user.getStaffName());
+        updateUser.setWorkCode(user.getWorkCode());
         updateUser.setEmail(user.getEmail());
         updateUser.setPhone(user.getPhone());
         updateUser.setQuestion(user.getQuestion());
         updateUser.setAnswer(user.getAnswer());
+        updateUser.setCentre(user.getCentre());
+        updateUser.setRole(user.getRole());
 
         int updateCount = userMapper.updateByPrimaryKeySelective(updateUser);
         if(updateCount > 0){
-            return ServerResponse.createBySuccess("更新个人信息成功",updateUser);
+            return ServerResponse.createBySuccess("更新个人信息成功",this.getInformation(user.getId()).getData());
         }
         return ServerResponse.createByErrorMessage("更新个人信息失败");
     }
@@ -183,6 +203,25 @@ public class UserServiceImpl implements IUserService {
     }
 
 
+    public ServerResponse<PageInfo> getInformationList(int pageNum, int pageSize){
+        //startPage--start
+        //填充自己的sql查询逻辑
+        //pageHelper-收尾
+        PageHelper.startPage(pageNum,pageSize);
+        List<User> userList = userMapper.selectList();
+        for(User userItem :userList){
+            userItem.setPassword(org.apache.commons.lang3.StringUtils.EMPTY);
+        }
+
+/*        List<ProductListVo> productListVoList = Lists.newArrayList();
+        for(Product productItem : productList){
+            ProductListVo productListVo = assembleProductListVo(productItem);
+            productListVoList.add(productListVo);
+        }*/
+        PageInfo pageResult = new PageInfo(userList);
+        //pageResult.setList(productListVoList);
+        return ServerResponse.createBySuccess(pageResult);
+    }
 
 
     //backend
@@ -190,7 +229,8 @@ public class UserServiceImpl implements IUserService {
     /**
      * 校验是否是管理员
      * @param user
-     * @return
+     * @return 若为管理员,返回status=0 若不是管理员 返回status=1
+     * 经过issuccess方法比对, 若是管理员,返回true 若不是管理员返回false
      */
     public ServerResponse checkAdminRole(User user){
         if(user != null && user.getRole().intValue() == Const.Role.ROLE_ADMIN){

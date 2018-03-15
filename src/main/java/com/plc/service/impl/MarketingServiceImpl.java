@@ -7,12 +7,15 @@ import com.plc.dao.MarketingMapper;
 import com.plc.pojo.Marketing;
 import com.plc.service.IMarketingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by gongkelvin on 2018/3/14.
  */
+@Service("iMarketingService")
 public class MarketingServiceImpl implements IMarketingService {
 
     @Autowired
@@ -57,9 +60,9 @@ public class MarketingServiceImpl implements IMarketingService {
         }
         int resultCount = marketingMapper.insert(marketing);
         if(resultCount == 0){
-            return ServerResponse.createByErrorMessage("添加中心失败");
+            return ServerResponse.createByErrorMessage("添加渠道失败");
         }
-        return ServerResponse.createBySuccessMessage("添加中心成功");
+        return ServerResponse.createBySuccessMessage("添加渠道成功");
     }
 
     /**
@@ -80,20 +83,36 @@ public class MarketingServiceImpl implements IMarketingService {
     public ServerResponse<Marketing> updateMarketing(Marketing marketing){
         //Centrename是不能被更新的
         //email也要进行一个校验,校验新的email是不是已经存在,并且存在的email如果相同的话,不能是我们当前的这个用户的.
-        ServerResponse validResponse = this.checkValid(marketing.getMarketingName());
-        if(!validResponse.isSuccess()){
-            return validResponse;
+        Marketing tempMarketing= marketingMapper.selectByPrimaryKey(marketing.getId());
+        if(tempMarketing==null){
+            return ServerResponse.createByErrorMessage("参数错误(id未匹配)");
         }
+        String oldname=tempMarketing.getMarketingName();
+        //把当前id的渠道名修改为不可重复值
         Marketing updateMarketing = new Marketing();
         updateMarketing.setId(marketing.getId());
-        updateMarketing.setMarketingName(marketing.getMarketingName());
-        updateMarketing.setMarketingClass(marketing.getMarketingClass());
-        updateMarketing.setStatus(marketing.getStatus());
-
+        updateMarketing.setMarketingName(UUID.randomUUID().toString());
 
         int updateCount = marketingMapper.updateByPrimaryKeySelective(updateMarketing);
-        if(updateCount > 0){
-            return ServerResponse.createBySuccess("更新渠道信息成功",updateMarketing);
+        if(updateCount>0){
+            //判断marketingname是否是重复值
+            ServerResponse validResponse = this.checkValid(marketing.getMarketingName());
+            if(!validResponse.isSuccess()){
+                //校验失败,将原marketing值写回,并且报告校验失败
+                updateMarketing.setMarketingName(oldname);
+                updateCount = marketingMapper.updateByPrimaryKeySelective(updateMarketing);
+                if(updateCount > 0){
+                    return validResponse;
+                }
+            }
+            //校验成功,将新值写入
+            updateMarketing.setMarketingName(marketing.getMarketingName());
+            updateMarketing.setMarketingClass(marketing.getMarketingClass());
+            updateMarketing.setStatus(marketing.getStatus());
+            updateCount = marketingMapper.updateByPrimaryKeySelective(updateMarketing);
+            if(updateCount > 0){
+                return ServerResponse.createBySuccess("更新渠道信息成功",marketingMapper.selectByPrimaryKey(marketing.getId()));
+            }
         }
         return ServerResponse.createByErrorMessage("更新渠道信息失败");
     }

@@ -10,9 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * Created by geely
@@ -52,7 +54,11 @@ public class UserController {
 
     @RequestMapping(value = "register.do",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<String> register(User user){
+    public ServerResponse<String> register(HttpSession session,User user){
+        User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
+        if(!iUserService.checkAdminRole(currentUser).isSuccess()){
+            return ServerResponse.createByErrorMessage("无权限操作");
+        }
         return iUserService.register(user);
     }
 
@@ -107,10 +113,20 @@ public class UserController {
         return iUserService.resetPassword(passwordOld,passwordNew,user);
     }
 
+    @RequestMapping(value = "reset_password_admin.do",method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<String> resetPasswordAdmin(HttpSession session,String passwordNew,User user){
+        User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
+        if(!iUserService.checkAdminRole(currentUser).isSuccess()){
+            return ServerResponse.createByErrorMessage("无权限操作");
+        }
+        return iUserService.resetPasswordByAdmin(passwordNew,user);
+    }
+
 
     @RequestMapping(value = "update_information.do",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<User> update_information(HttpSession session,User user){
+    public ServerResponse<User> updateInformation(HttpSession session,User user){
         User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
         if(currentUser == null){
             return ServerResponse.createByErrorMessage("用户未登录");
@@ -127,7 +143,7 @@ public class UserController {
 
     @RequestMapping(value = "get_information.do",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<User> get_information(HttpSession session){
+    public ServerResponse<User> getInformation(HttpSession session){
         User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
         if(currentUser == null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"未登录,需要强制登录status=10");
@@ -135,8 +151,34 @@ public class UserController {
         return iUserService.getInformation(currentUser.getId());
     }
 
+    @RequestMapping(value = "update_information_admin.do",method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<User> updateInformationAdmin(HttpSession session,User user){
+        User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
+        if(!iUserService.checkAdminRole(currentUser).isSuccess()){
+            return ServerResponse.createByErrorMessage("无权限操作");
+        }
+
+        ServerResponse<User> response = iUserService.updateInformation(user);
+        if(!response.isSuccess()){
+            return ServerResponse.createByErrorMessage("更新失败");
+        }
+
+        return response;
+    }
 
 
+    @RequestMapping(value = "get_information_admin.do",method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse getInformationAdmin(HttpSession session,@RequestParam(value = "pageNum",defaultValue = "1") int pageNum, @RequestParam(value = "pageSize",defaultValue = "10")int pageSize){
+        User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
+        if(!iUserService.checkAdminRole(currentUser).isSuccess()){
+            return ServerResponse.createByErrorMessage("无权限操作");
+        }
+
+
+        return iUserService.getInformationList(pageNum,pageSize);
+    }
 
 
 

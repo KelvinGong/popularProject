@@ -85,13 +85,9 @@ public class CentreServiceImpl implements ICentreService{
     public ServerResponse<Centre> updateCentre(Centre centre){
         //Centrename是不能被更新的
         //email也要进行一个校验,校验新的email是不是已经存在,并且存在的email如果相同的话,不能是我们当前的这个用户的.
-        ServerResponse validResponse = this.checkValid(centre.getCentreCode());
-        if(!validResponse.isSuccess()){
-            return validResponse;
-        }
+
         Centre updateCentre = new Centre();
         updateCentre.setId(centre.getId());
-        updateCentre.setCentreCode(centre.getCentreCode());
         updateCentre.setCentreName(centre.getCentreName());
         updateCentre.setCentreRegion(centre.getCentreRegion());
         updateCentre.setAddress(centre.getAddress());
@@ -100,9 +96,9 @@ public class CentreServiceImpl implements ICentreService{
 
         int updateCount = centreMapper.updateByPrimaryKeySelective(updateCentre);
         if(updateCount > 0){
-            return ServerResponse.createBySuccess("更新个人信息成功",updateCentre);
+            return ServerResponse.createBySuccess("更新中心信息成功",centreMapper.selectByPrimaryKey(centre.getId()));
         }
-        return ServerResponse.createByErrorMessage("更新个人信息失败");
+        return ServerResponse.createByErrorMessage("更新中心信息失败");
     }
 
 
