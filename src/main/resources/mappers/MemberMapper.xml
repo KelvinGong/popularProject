@@ -13,7 +13,7 @@
       <arg column="phone" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="wechat" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="address" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="centre" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="centre" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="refer_from" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="marketing" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="remarks" jdbcType="VARCHAR" javaType="java.lang.String" />
@@ -45,7 +45,7 @@
     values (#{id,jdbcType=INTEGER}, #{memberCode,jdbcType=VARCHAR}, #{memName,jdbcType=VARCHAR}, 
       #{nameEng,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, #{gender,jdbcType=CHAR}, 
       #{nameParents,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{wechat,jdbcType=VARCHAR}, 
-      #{address,jdbcType=VARCHAR}, #{centre,jdbcType=VARCHAR}, #{referFrom,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{centre,jdbcType=INTEGER}, #{referFrom,jdbcType=VARCHAR},
       #{marketing,jdbcType=INTEGER}, #{remarks,jdbcType=VARCHAR}, now(),
      now())
   </insert>
@@ -133,7 +133,7 @@
         #{address,jdbcType=VARCHAR},
       </if>
       <if test="centre != null" >
-        #{centre,jdbcType=VARCHAR},
+        #{centre,jdbcType=INTEGER},
       </if>
       <if test="referFrom != null" >
         #{referFrom,jdbcType=VARCHAR},
@@ -183,7 +183,7 @@
         address = #{address,jdbcType=VARCHAR},
       </if>
       <if test="centre != null" >
-        centre = #{centre,jdbcType=VARCHAR},
+        centre = #{centre,jdbcType=INTEGER},
       </if>
       <if test="referFrom != null" >
         refer_from = #{referFrom,jdbcType=VARCHAR},
@@ -214,7 +214,7 @@
       phone = #{phone,jdbcType=VARCHAR},
       wechat = #{wechat,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
-      centre = #{centre,jdbcType=VARCHAR},
+      centre = #{centre,jdbcType=INTEGER},
       refer_from = #{referFrom,jdbcType=VARCHAR},
       marketing = #{marketing,jdbcType=INTEGER},
       remarks = #{remarks,jdbcType=VARCHAR},
@@ -222,4 +222,25 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectListAll" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List"/>
+    from plc_centre
+    ORDER BY id asc
+  </select>
+  <select id="checkMemberCode" resultType="int" parameterType="string">
+    select count(1) from plc_member
+    where member_code = #{memberCode}
+  </select>
+  <select id="selectByKeyword" resultMap="BaseResultMap" parameterType="map">
+    SELECT
+    <include refid="Base_Column_List"></include>
+    from plc_member
+    <if test="keyword != null">
+      and #{field} like #{keyword}
+    </if>
+    <if test="centreCode != null" >
+      and centre = #{centreCode}
+    </if>
+  </select>
 </mapper>

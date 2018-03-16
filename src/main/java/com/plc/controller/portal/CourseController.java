@@ -3,9 +3,9 @@ package com.plc.controller.portal;
 import com.plc.common.Const;
 import com.plc.common.ResponseCode;
 import com.plc.common.ServerResponse;
-import com.plc.pojo.Marketing;
+import com.plc.pojo.Course;
 import com.plc.pojo.User;
-import com.plc.service.IMarketingService;
+import com.plc.service.ICourseService;
 import com.plc.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,67 +17,64 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 
 /**
- * Created by gongkelvin on 2018/3/15.
+ * Created by gongkelvin on 2018/3/16.
  */
 @Controller
-@RequestMapping("/marketing/")
-public class MarketingController {
+@RequestMapping("/course/")
+public class CourseController {
 
     @Autowired
-    private IMarketingService iMarketingService;
+    private ICourseService iCourseService;
 
     @Autowired
     private IUserService iUserService;
 
-    @RequestMapping(value = "list_marketing.do",method = RequestMethod.GET)
+    @RequestMapping(value = "list_course.do",method = RequestMethod.GET)
     @ResponseBody
-    public ServerResponse listMarketing(@RequestParam(value = "pageNum",defaultValue = "1") int pageNum, @RequestParam(value = "pageSize",defaultValue = "10")int pageSize){
-/*      ServerResponse<User> response = iUserService.login(username,password);
+    public ServerResponse listCourse(
+                                     @RequestParam(value = "pageNum",defaultValue = "1")int pageNum,
+                                     @RequestParam(value = "pageSize",defaultValue = "10")int pageSize){
 
-        if(response.isSuccess()){
-            session.setAttribute(Const.CURRENT_USER,response.getData());
-        }*/
-
-        return iMarketingService.getMarketingList(pageNum, pageSize);
+        return iCourseService.getCourseList(pageNum, pageSize);
     }
 
-    @RequestMapping(value = "list_active_marketing.do",method = RequestMethod.GET)
+    @RequestMapping(value = "list_active_course.do",method = RequestMethod.GET)
     @ResponseBody
-    public ServerResponse listActiveMarketing(){
+    public ServerResponse listActiveCourse(){
 /*        ServerResponse<User> response = iUserService.login(username,password);
 
         if(response.isSuccess()){
             session.setAttribute(Const.CURRENT_USER,response.getData());
         }*/
 
-        return iMarketingService.getActiveMarketingList();
+        return iCourseService.getActiveCourseList();
     }
 
-    @RequestMapping(value = "add_marketing.do",method = RequestMethod.GET)
+    @RequestMapping(value = "add_course.do",method = RequestMethod.GET)
     @ResponseBody
-    public ServerResponse addMarketing(HttpSession session, Marketing marketing){
+    public ServerResponse addMarketing(HttpSession session, Course course){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         if(user == null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录管理员");
         }
         if(iUserService.checkAdminRole(user).isSuccess()){
             //填充我们增加产品的业务逻辑
-            return iMarketingService.addMarketing(marketing);
+            return iCourseService.addCourse(course,user.getId());
         }else{
             return ServerResponse.createByErrorMessage("无权限操作");
         }
     }
 
-    @RequestMapping(value = "update_marketing.do",method = RequestMethod.GET)
+    @RequestMapping(value = "update_course.do",method = RequestMethod.GET)
     @ResponseBody
-    public ServerResponse updateMarketing(HttpSession session,Marketing marketing){
+    public ServerResponse updateCourse(HttpSession session,Course course){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         if(user == null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录管理员");
         }
         if(iUserService.checkAdminRole(user).isSuccess()){
             //填充我们增加产品的业务逻辑
-            return iMarketingService.updateMarketing(marketing);
+            return iCourseService.updateCourse(course,user.getId());
         }else{
             return ServerResponse.createByErrorMessage("无权限操作");
         }

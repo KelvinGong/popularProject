@@ -23,7 +23,7 @@ public class Member {
 
     private String address;
 
-    private String centre;
+    private Integer centre;
 
     private String referFrom;
 
@@ -35,7 +35,7 @@ public class Member {
 
     private Date updateTime;
 
-    public Member(Integer id, String memberCode, String memName, String nameEng, Date birthday, String gender, String nameParents, String phone, String wechat, String address, String centre, String referFrom, Integer marketing, String remarks, Date createTime, Date updateTime) {
+    public Member(Integer id, String memberCode, String memName, String nameEng, Date birthday, String gender, String nameParents, String phone, String wechat, String address, Integer centre, String referFrom, Integer marketing, String remarks, Date createTime, Date updateTime) {
         this.id = id;
         this.memberCode = memberCode;
         this.memName = memName;
@@ -138,12 +138,12 @@ public class Member {
         this.address = address == null ? null : address.trim();
     }
 
-    public String getCentre() {
+    public Integer getCentre() {
         return centre;
     }
 
-    public void setCentre(String centre) {
-        this.centre = centre == null ? null : centre.trim();
+    public void setCentre(Integer centre) {
+        this.centre = centre;
     }
 
     public String getReferFrom() {

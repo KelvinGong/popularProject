@@ -1,6 +1,9 @@
 package com.plc.dao;
 
 import com.plc.pojo.Member;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface MemberMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +17,10 @@ public interface MemberMapper {
     int updateByPrimaryKeySelective(Member record);
 
     int updateByPrimaryKey(Member record);
+
+    List<Member> selectListAll();
+
+    int checkMemberCode(String memberCode);
+
+    List<Member> selectByKeyword(@Param("centreCode") int centreCode, @Param("keyword") String keyword, @Param("field")String field);
 }
