@@ -3,25 +3,23 @@ package com.plc.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.plc.common.ServerResponse;
-import com.plc.dao.CourseMapper;
-import com.plc.pojo.Course;
-import com.plc.service.ICourseService;
-import org.apache.commons.io.filefilter.FalseFileFilter;
+import com.plc.dao.ClassMapper;
+import com.plc.pojo.Class;
+import com.plc.service.IClassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.LastModified;
 
 import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by gongkelvin on 2018/3/16.
+ * Created by gongkelvin on 2018/3/19.
  */
-@Service("iCourseService")
-public class CourseServiceImpl implements ICourseService {
+@Service("iClassService")
+public class ClassServiceImpl implements IClassService {
 
     @Autowired
-    private CourseMapper courseMapper;
+    private ClassMapper classMapper;
 
     /**
      * 用于显示课程列表,无status校验,有分页插件
@@ -29,12 +27,12 @@ public class CourseServiceImpl implements ICourseService {
      * @param pageSize
      * @return
      */
-    public ServerResponse<PageInfo> getCourseList(int pageNum, int pageSize){
+    public ServerResponse<PageInfo> getClassList(int pageNum, int pageSize,int centreCode){
         //startPage--start
         //填充自己的sql查询逻辑
         //pageHelper-收尾
         PageHelper.startPage(pageNum,pageSize);
-        List<Course> courseList = courseMapper.selectList();
+        List<Class> courseList = classMapper.selectList(centreCode);
 
 /*        List<ProductListVo> productListVoList = Lists.newArrayList();
         for(Product productItem : productList){
@@ -50,18 +48,18 @@ public class CourseServiceImpl implements ICourseService {
      * 用于显示渠道列表,有status校验,无分页插件
      * @return
      */
-    public ServerResponse getActiveCourseList(){
-        List<Course> courseList = courseMapper.selectActiveList();
-        return ServerResponse.createBySuccess(courseList);
+    public ServerResponse getActiveClassList(Integer centreCode){
+        List<Class> classList = classMapper.selectActiveList(centreCode);
+        return ServerResponse.createBySuccess(classList);
     }
 
-    public ServerResponse<String> addCourse(Course course,Integer currentUserId){
-        ServerResponse validResponse = this.checkValid(course.getCourseCode());
+    public ServerResponse<String> addClass(Class classOB,Integer currentUserId){
+        ServerResponse validResponse = this.checkValid(classOB.getClassCode());
         if(!validResponse.isSuccess()){
             return validResponse;
         }
-        course.setLastUpdateUser(currentUserId);
-        int resultCount = courseMapper.insert(course);
+        classOB.setLastUpdateUser(currentUserId);
+        int resultCount = classMapper.insert(classOB);
         if(resultCount == 0){
             return ServerResponse.createByErrorMessage("添加课程失败");
         }
@@ -75,59 +73,63 @@ public class CourseServiceImpl implements ICourseService {
      */
     public ServerResponse<String> checkValid(String str){
         //开始校验
-        int resultCount = courseMapper.checkCourseCode(str);
+        int resultCount = classMapper.checkClassCode(str);
         if(resultCount > 0 ){
-            return ServerResponse.createByErrorMessage("课程code已存在");
+            return ServerResponse.createByErrorMessage("班级号已存在");
         }
         return ServerResponse.createBySuccessMessage("校验成功");
     }
 
-    public ServerResponse<Course> updateCourse(Course course, Integer currentUserId){
+    public ServerResponse<Class> updateClass(Class classOB, Integer currentUserId){
         //Centrename是不能被更新的
         //email也要进行一个校验,校验新的email是不是已经存在,并且存在的email如果相同的话,不能是我们当前的这个用户的.
-        Course tempCourse= courseMapper.selectByPrimaryKey(course.getId());
-        if(tempCourse==null){
+        Class tempClass= classMapper.selectByPrimaryKey(classOB.getId());
+        if(tempClass==null){
             return ServerResponse.createByErrorMessage("参数错误(id未匹配)");
         }
-        String oldname=tempCourse.getCourseCode();
+        String oldname=tempClass.getClassCode();
         //把当前id的渠道名修改为不可重复值
-        Course updateCourse = new Course();
-        updateCourse.setId(course.getId());
-        if(course.getCourseCode()!=null){
-            updateCourse.setCourseCode(UUID.randomUUID().toString());
+        Class updateClass = new Class();
+        updateClass.setId(classOB.getId());
+        if(classOB.getClassCode()!=null){
+            updateClass.setClassCode(UUID.randomUUID().toString());
 
-            int updateCount = courseMapper.updateByPrimaryKeySelective(updateCourse);
+            int updateCount = classMapper.updateByPrimaryKeySelective(updateClass);
             if(updateCount>0){
                 //判断coursename是否是重复值
-                ServerResponse validResponse = this.checkValid(course.getCourseCode());
+                ServerResponse validResponse = this.checkValid(classOB.getClassCode());
                 if(!validResponse.isSuccess()){
                     //校验失败,将原course值写回,并且报告校验失败
-                    updateCourse.setCourseCode(oldname);
-                    updateCount = courseMapper.updateByPrimaryKeySelective(updateCourse);
+                    updateClass.setClassCode(oldname);
+                    updateCount = classMapper.updateByPrimaryKeySelective(updateClass);
                     if(updateCount > 0){
                         return validResponse;
                     }
                 }
             }
-            updateCourse.setCourseCode(course.getCourseCode());
+            updateClass.setClassCode(classOB.getClassCode());
         }
         //校验成功,将新值写入
 
-        updateCourse.setCourseDesc(course.getCourseDesc());
-        updateCourse.setPrice(course.getPrice());
-        updateCourse.setStatus(course.getStatus());
-        updateCourse.setIsShort(course.getIsShort());
-        updateCourse.setRemarks(course.getRemarks());
+        updateClass.setCtrCode(classOB.getCtrCode());
+        updateClass.setStatus(classOB.getStatus());
+        updateClass.setFirstclassTime(classOB.getFirstclassTime());
+        updateClass.setEndclassTime(classOB.getEndclassTime());
+        updateClass.setDayOfWeek(classOB.getDayOfWeek());
+        updateClass.setEi(classOB.getEi());
+        updateClass.setTa(classOB.getTa());
+        updateClass.setIi(classOB.getIi());
+        updateClass.setRemarks(classOB.getRemarks());
 
-        int updateCount = courseMapper.updateByPrimaryKeySelective(updateCourse);
-        if(updateCount >0 && this.lastUpdateUser(course.getId(), currentUserId)){
-            return ServerResponse.createBySuccess("更新渠道信息成功",courseMapper.selectByPrimaryKey(course.getId()));
+        int updateCount = classMapper.updateByPrimaryKeySelective(updateClass);
+        if(updateCount >0 && this.lastUpdateUser(classOB.getId(), currentUserId)){
+            return ServerResponse.createBySuccess("更新渠道信息成功",classMapper.selectByPrimaryKey(classOB.getId()));
         }
         return ServerResponse.createByErrorMessage("更新渠道信息失败");
     }
 
     private boolean lastUpdateUser(int id, int lastUpdateUser){
-        int updateCount = courseMapper.updateLastUser(id ,lastUpdateUser);
+        int updateCount = classMapper.updateLastUser(id ,lastUpdateUser);
         if(updateCount>0){
             return true;
         }

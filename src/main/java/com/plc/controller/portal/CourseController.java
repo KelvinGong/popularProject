@@ -52,7 +52,7 @@ public class CourseController {
 
     @RequestMapping(value = "add_course.do",method = RequestMethod.GET)
     @ResponseBody
-    public ServerResponse addMarketing(HttpSession session, Course course){
+    public ServerResponse addCourse(HttpSession session, Course course){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         if(user == null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录管理员");

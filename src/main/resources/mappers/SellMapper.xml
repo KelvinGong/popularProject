@@ -328,4 +328,17 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectByKeyword" resultMap="BaseResultMap" parameterType="map">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM plc_sell
+    <where>
+      <if test="keyword != null">
+        and ${field} LIKE #{keyword}
+      </if>
+      <if test="centreCode != 0" >
+        and centre = #{centreCode}
+      </if>
+    </where>
+  </select>
 </mapper>

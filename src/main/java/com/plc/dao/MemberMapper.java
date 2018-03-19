@@ -23,4 +23,5 @@ public interface MemberMapper {
     int checkMemberCode(String memberCode);
 
     List<Member> selectByKeyword(@Param("centreCode") int centreCode, @Param("keyword") String keyword, @Param("field")String field);
+
 }

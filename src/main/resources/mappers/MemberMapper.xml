@@ -232,15 +232,18 @@
     select count(1) from plc_member
     where member_code = #{memberCode}
   </select>
+
   <select id="selectByKeyword" resultMap="BaseResultMap" parameterType="map">
     SELECT
-    <include refid="Base_Column_List"></include>
-    from plc_member
-    <if test="keyword != null">
-      and #{field} like #{keyword}
-    </if>
-    <if test="centreCode != null" >
-      and centre = #{centreCode}
-    </if>
+    <include refid="Base_Column_List"/>
+    FROM plc_member
+    <where>
+      <if test="keyword != null">
+        and ${field} LIKE #{keyword}
+      </if>
+      <if test="centreCode != 0" >
+        and centre = #{centreCode}
+      </if>
+    </where>
   </select>
 </mapper>

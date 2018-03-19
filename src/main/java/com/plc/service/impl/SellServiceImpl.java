@@ -5,40 +5,32 @@ import com.github.pagehelper.PageInfo;
 import com.plc.common.Const;
 import com.plc.common.ResponseCode;
 import com.plc.common.ServerResponse;
-import com.plc.dao.MemberMapper;
-import com.plc.pojo.Member;
-import com.plc.service.IMemberService;
-import org.apache.commons.lang.enums.ValuedEnum;
+import com.plc.dao.SellMapper;
+import com.plc.pojo.Sell;
+import com.plc.service.ISellService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by gongkelvin on 2018/3/15.
+ * Created by gongkelvin on 2018/3/19.
  */
-@Service("iMemberService")
-public class MemberServiceImpl implements IMemberService {
+@Service("iSellService")
+public class SellServiceImpl implements ISellService {
 
     @Autowired
-    private MemberMapper memberMapper;
+    private SellMapper sellMapper;
 
-
-
-    public ServerResponse<PageInfo> listMember(Integer centreCode,
+    public ServerResponse<PageInfo> listSell(Integer centreCode,
                                                String keyword,
                                                String field,
                                                int pageNum,
                                                int pageSize,
                                                String orderByField,
-                                               String orderBy
-                                               ){
-
+                                               String orderBy){
         //startPage--start
         //填充自己的sql查询逻辑
         //pageHelper-收尾
@@ -53,8 +45,8 @@ public class MemberServiceImpl implements IMemberService {
         //排序处理
         if(StringUtils.isNotBlank(orderBy)) {
             //校验排序语句
-            if(Const.memberOrderBy.ORDER_FIELD.contains(orderByField)){
-                if(Const.memberOrderBy.ORDER.contains(orderBy)) {
+            if(Const.sellOrderBy.ORDER_FIELD.contains(orderByField)){
+                if(Const.sellOrderBy.ORDER.contains(orderBy)) {
                     //String[] orderByArray = orderBy.split("_");
                     PageHelper.orderBy(orderByField+" "+orderBy);
                 }else{
@@ -68,30 +60,27 @@ public class MemberServiceImpl implements IMemberService {
         if(StringUtils.isNotBlank(keyword)){
             keyword = new StringBuilder().append("%").append(keyword).append("%").toString();
         }
-        List<Member> memberList = memberMapper.selectByKeyword(centreCode,StringUtils.isBlank(keyword)?null:keyword,StringUtils.isBlank(field)?null:field);
+        List<Sell> sellList = sellMapper.selectByKeyword(centreCode,StringUtils.isBlank(keyword)?null:keyword,StringUtils.isBlank(field)?null:field);
 
-
-
-        PageInfo pageInfo = new PageInfo(memberList);
+        PageInfo pageInfo = new PageInfo(sellList);
         //pageInfo.setList(productListVoList);
         return ServerResponse.createBySuccess(pageInfo);
-
     }
 
 
-    public ServerResponse<String> addMember(Member member){
-        ServerResponse validResponse = this.checkValid(member.getMemberCode());
+    public ServerResponse<String> addSell(Sell sell){
+/*        ServerResponse validResponse = this.checkValid(sell.getMemberCode());
         if(!validResponse.isSuccess()){
             return validResponse;
-        }
-        int resultCount = memberMapper.insert(member);
+        }*/
+        int resultCount = sellMapper.insert(sell);
         if(resultCount == 0){
-            return ServerResponse.createByErrorMessage("添加会员失败");
+            return ServerResponse.createByErrorMessage("添加销售单失败");
         }
-        return ServerResponse.createBySuccessMessage("添加会员成功");
+        return ServerResponse.createBySuccessMessage("添加销售单成功");
     }
 
-    public ServerResponse<String> checkValid(String str){
+/*    public ServerResponse<String> checkValid(String str){
         //开始校验
 
         int resultCount = memberMapper.checkMemberCode(str);
@@ -99,17 +88,17 @@ public class MemberServiceImpl implements IMemberService {
             return ServerResponse.createByErrorMessage("会员号已存在");
         }
         return ServerResponse.createBySuccessMessage("校验成功");
-    }
+    }*/
 
-    public ServerResponse<Member> updateMember(Member member){
+    public ServerResponse<Sell> updateMember(Sell sell){
 
         //Centrename是不能被更新的
         //email也要进行一个校验,校验新的email是不是已经存在,并且存在的email如果相同的话,不能是我们当前的这个用户的.
-        Member tempMember= memberMapper.selectByPrimaryKey(member.getId());
-        if(tempMember==null){
+        Sell tempSell= sellMapper.selectByPrimaryKey(sell.getId());
+        if(tempSell==null){
             return ServerResponse.createByErrorMessage("参数错误(id未匹配)");
         }
-        String oldname=tempMember.getMemberCode();
+/*        String oldname=tempSell.getMemberCode();
         //把当前id的渠道名修改为不可重复值
         Member updateMember = new Member();
         updateMember.setId(tempMember.getId());
@@ -132,27 +121,18 @@ public class MemberServiceImpl implements IMemberService {
             }
 
             updateMember.setMemberCode(member.getMemberCode());
-        }
+        }*/
 
 
         //校验成功,将新值写入
 
-        updateMember.setMemName(member.getMemName());
-        updateMember.setNameEng(member.getNameEng());
-        updateMember.setBirthday(member.getBirthday());
-        updateMember.setGender(member.getGender());
-        updateMember.setNameParents(member.getNameParents());
-        updateMember.setPhone(member.getPhone());
-        updateMember.setWechat(member.getWechat());
-        updateMember.setAddress(member.getAddress());
-        updateMember.setCentre(member.getCentre());
-        updateMember.setReferFrom(member.getReferFrom());
-        updateMember.setMarketing(member.getMarketing());
-        updateMember.setRemarks(member.getRemarks());
+        Sell updateSell=new Sell();
+        updateSell.setMemberCode(sell.getMemberCode());
 
-        int updateCount = memberMapper.updateByPrimaryKeySelective(updateMember);
+
+        int updateCount = sellMapper.updateByPrimaryKeySelective(updateSell);
         if(updateCount > 0){
-            return ServerResponse.createBySuccess("更新会员信息成功",memberMapper.selectByPrimaryKey(member.getId()));
+            return ServerResponse.createBySuccess("更新会员信息成功",sellMapper.selectByPrimaryKey(sell.getId()));
         }
         return ServerResponse.createByErrorMessage("更新会员信息失败");
     }

@@ -15,7 +15,8 @@ public interface IMemberService {
 
     ServerResponse<Member> updateMember(Member member);
 
-    ServerResponse<PageInfo> listMember(String keyword,
+    ServerResponse<PageInfo> listMember(Integer centreCode,
+                                        String keyword,
                                         String field,
                                         int pageNum,
                                         int pageSize,

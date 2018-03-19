@@ -37,26 +37,22 @@ public class MemberController {
                                                @RequestParam(value = "pageNum",defaultValue = "1")int pageNum,
                                                @RequestParam(value = "pageSize",defaultValue = "10") int pageSize,
                                                @RequestParam(value = "orderByField",defaultValue = "") String orderByField,
-                                               @RequestParam(value = "orderBy",defaultValue = "") String orderBy
+                                               @RequestParam(value = "orderBy",defaultValue = "") String orderBy,
+                                               @RequestParam(value = "centreCode",required = false) Integer centreCode
                                                ){
-/*        ServerResponse<User> response = iUserService.login(username,password);
+       User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
+       if(currentUser == null){
+           return ServerResponse.createByErrorMessage("用户未登录");
+       }
+       if(iUserService.checkAdminRole(currentUser).isSuccess()){
+           //填充我们增加产品的业务逻辑
+           centreCode = centreCode==null?0:centreCode;
 
-        if(response.isSuccess()){
-            session.setAttribute(Const.CURRENT_USER,response.getData());
-        }
+       }else{
+           centreCode=currentUser.getCentre();
+       }
 
-        User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
-        if(currentUser == null){
-            return ServerResponse.createByErrorMessage("用户未登录");
-        }
-        if(!iUserService.checkAdminRole(currentUser).isSuccess()){
-
-
-            return ServerResponse.createByErrorMessage("无权限操作");
-        }
-        return iUserService.register(user);
-        return iCentreService.getCentreList(pageNum, pageSize);*/
-       return iMemberService.listMember(keyword, field, pageNum, pageSize, orderByField, orderBy);
+       return iMemberService.listMember(centreCode,keyword, field, pageNum, pageSize, orderByField, orderBy);
     }
 
     @RequestMapping(value = "add_member.do", method = RequestMethod.GET)
@@ -65,6 +61,9 @@ public class MemberController {
         User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
         if(currentUser == null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
+        }
+        if(!iUserService.checkAdminRole(currentUser).isSuccess()){
+            member.setCentre(currentUser.getCentre());
         }
         return iMemberService.addMember(member);
 
@@ -76,6 +75,9 @@ public class MemberController {
         User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
         if(currentUser == null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
+        }
+        if(!iUserService.checkAdminRole(currentUser).isSuccess()){
+            member.setCentre(currentUser.getCentre());
         }
         return iMemberService.updateMember(member);
 

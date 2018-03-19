@@ -209,4 +209,34 @@
       last_update_user = #{lastUpdateUser,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectList" resultMap="BaseResultMap" parameterType="int">
+    SELECT
+    <include refid="Base_Column_List"/>
+    from plc_class
+    <where>
+      <if test="centreCode != null">
+        AND  centreCode= #{centreCode}
+      </if>
+    </where>
+  </select>
+  <select id="selectActiveList" resultMap="BaseResultMap" parameterType="int">
+    SELECT
+    <include refid="Base_Column_List"/>
+    from plc_class
+    <where>
+      <if test="centreCode != null">
+        AND  centreCode= #{centreCode}
+      </if>
+        AND status = 1
+    </where>
+  </select>
+  <select id="checkClassCode" resultType="int" parameterType="string">
+    select count(1) from plc_class
+    where class_code = #{classCode}
+  </select>
+  <update id="updateLastUser" parameterType="com.plc.pojo.Class" >
+    update plc_class
+    set last_update_user = #{lastUpdateUser,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
 </mapper>

@@ -1,6 +1,7 @@
 package com.plc.common;
 
 import com.google.common.collect.Sets;
+import com.google.gson.FieldAttributes;
 
 import java.util.Set;
 
@@ -14,8 +15,27 @@ public class Const {
     public static final String EMAIL = "email";
     public static final String USERNAME = "username";
 
-    public interface ProductListOrderBy{
-        Set<String> PRICE_ASC_DESC = Sets.newHashSet("price_desc","price_asc");
+
+    public interface memberOrderBy{
+        Set<String> ORDER_FIELD= Sets.newHashSet(
+                "id",
+                "member_code",
+                "mem_name",
+                "name_eng"
+                );
+        Set<String> ORDER=Sets.newHashSet("asc","desc");
+
+    }
+
+    public interface sellOrderBy{
+        Set<String> ORDER_FIELD= Sets.newHashSet(
+                "id",
+                "member_code",
+                "mem_name",
+                "name_eng"
+        );
+        Set<String> ORDER=Sets.newHashSet("asc","desc");
+
     }
 
     public interface Cart{
