@@ -32,14 +32,20 @@ public class ClassControl {
     @RequestMapping(value = "list_class.do",method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse listClass(HttpSession session,
-            @RequestParam(value = "pageNum",defaultValue = "1")int pageNum,
-            @RequestParam(value = "pageSize",defaultValue = "10")int pageSize){
+                                    @RequestParam(value = "pageNum",defaultValue = "1")int pageNum,
+                                    @RequestParam(value = "pageSize",defaultValue = "10")int pageSize,
+                                    @RequestParam(value = "ctrCode",required = false)Integer ctrCode){
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         if(user == null){
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录管理员");
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
         }
-        int centreCode=user.getCentre();
-        return iClassService.getClassList(pageNum, pageSize,centreCode);
+        if(iUserService.checkAdminRole(user).isSuccess()){
+            return iClassService.getClassList(pageNum, pageSize);
+        }else{
+            ctrCode=user.getCentre();
+            return iClassService.getClassList(pageNum, pageSize,ctrCode);
+        }
+
     }
 
     @RequestMapping(value = "list_active_class.do",method = RequestMethod.GET)
@@ -52,10 +58,15 @@ public class ClassControl {
         }*/
         User user = (User)session.getAttribute(Const.CURRENT_USER);
         if(user == null){
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录k");
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
         }
-        int centreCode=user.getCentre();
-        return iClassService.getActiveClassList(centreCode);
+        if(iUserService.checkAdminRole(user).isSuccess()){
+            return ServerResponse.createByErrorMessage("管理员用户需指定查看中心");
+        }else{
+            Integer ctrCode=user.getCentre();
+            return iClassService.getActiveClassList(ctrCode);
+        }
+
     }
 
     @RequestMapping(value = "add_class.do",method = RequestMethod.GET)
@@ -65,6 +76,7 @@ public class ClassControl {
         if(user == null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
         }
+        classOb.setCtrCode(user.getCentre());
         int centreCode=user.getCentre();
         return iClassService.addClass(classOb,centreCode);
     }
@@ -76,6 +88,7 @@ public class ClassControl {
         if(user == null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
         }
+        classOb.setCtrCode(user.getCentre());
         int centreCode=user.getCentre();
         return iClassService.updateClass(classOb,centreCode);
     }

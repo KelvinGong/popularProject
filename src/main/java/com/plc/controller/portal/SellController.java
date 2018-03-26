@@ -3,9 +3,9 @@ package com.plc.controller.portal;
 import com.plc.common.Const;
 import com.plc.common.ResponseCode;
 import com.plc.common.ServerResponse;
-import com.plc.pojo.Member;
+import com.plc.pojo.Sell;
 import com.plc.pojo.User;
-import com.plc.service.IMemberService;
+import com.plc.service.ISellService;
 import com.plc.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,31 +15,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
-import java.util.Date;
 
 /**
- * Created by gongkelvin on 2018/3/15.
+ * Created by gongkelvin on 2018/3/19.
  */
 @Controller
-@RequestMapping("/member/")
-public class MemberController {
+@RequestMapping("/sell/")
+public class SellController {
 
     @Autowired
-    private IMemberService iMemberService;
+    private ISellService iSellService;
 
     @Autowired
     private IUserService iUserService;
 
-    @RequestMapping(value = "list_member.do",method = RequestMethod.GET)
+    @RequestMapping(value = "list_sell.do",method = RequestMethod.GET)
     @ResponseBody
-    public ServerResponse listMember(HttpSession session,@RequestParam(value = "keyword",required = false)String keyword,
+    public ServerResponse listSell(HttpSession session, @RequestParam(value = "keyword",required = false)String keyword,
                                      @RequestParam(value = "field",required = false)String field,
                                      @RequestParam(value = "pageNum",defaultValue = "1")int pageNum,
                                      @RequestParam(value = "pageSize",defaultValue = "10") int pageSize,
                                      @RequestParam(value = "orderByField",defaultValue = "") String orderByField,
                                      @RequestParam(value = "orderBy",defaultValue = "") String orderBy,
-                                     @RequestParam(value = "centreCode",required = false) Integer centreCode
-    ){
+                                     @RequestParam(value = "centreCode",required = false) Integer centreCode){
         User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
         if(currentUser == null){
             return ServerResponse.createByErrorMessage("用户未登录");
@@ -52,45 +50,34 @@ public class MemberController {
             centreCode=currentUser.getCentre();
         }
 
-        return iMemberService.listMember(centreCode,keyword, field, pageNum, pageSize, orderByField, orderBy);
+        return iSellService.listSell(centreCode,keyword, field, pageNum, pageSize, orderByField, orderBy);
     }
 
-    @RequestMapping(value = "select_member.do",method = RequestMethod.GET)
+    @RequestMapping(value = "add_sell.do", method = RequestMethod.GET)
     @ResponseBody
-    public ServerResponse listMember(HttpSession session,@RequestParam(value = "id",required = false)Integer id){
-        User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
-        if(currentUser == null){
-            return ServerResponse.createByErrorMessage("用户未登录");
-        }
-        return iMemberService.selectById(id);
-    }
-
-    @RequestMapping(value = "add_member.do", method = RequestMethod.GET)
-    @ResponseBody
-    public ServerResponse addMember(HttpSession session, Member member){
+    public ServerResponse addSell(HttpSession session, Sell sell){
         User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
         if(currentUser == null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
         }
         if(!iUserService.checkAdminRole(currentUser).isSuccess()){
-            member.setCentre(currentUser.getCentre());
+            sell.setCtrCode(currentUser.getCentre());
         }
-        return iMemberService.addMember(member);
+        return iSellService.addSell(sell);
 
     }
 
-    @RequestMapping(value = "update_member.do", method = RequestMethod.GET)
+    @RequestMapping(value = "update_sell.do", method = RequestMethod.GET)
     @ResponseBody
-    public ServerResponse updateMember(HttpSession session, Member member){
+    public ServerResponse updateSell(HttpSession session, Sell sell){
         User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
         if(currentUser == null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"用户未登录,请登录");
         }
         if(!iUserService.checkAdminRole(currentUser).isSuccess()){
-            member.setCentre(currentUser.getCentre());
+            sell.setCtrCode(currentUser.getCentre());
         }
-        return iMemberService.updateMember(member);
+        return iSellService.updateMember(sell);
 
     }
-
 }

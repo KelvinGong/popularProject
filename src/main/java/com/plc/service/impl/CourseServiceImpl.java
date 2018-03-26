@@ -121,9 +121,9 @@ public class CourseServiceImpl implements ICourseService {
 
         int updateCount = courseMapper.updateByPrimaryKeySelective(updateCourse);
         if(updateCount >0 && this.lastUpdateUser(course.getId(), currentUserId)){
-            return ServerResponse.createBySuccess("更新渠道信息成功",courseMapper.selectByPrimaryKey(course.getId()));
+            return ServerResponse.createBySuccess("更新课程信息成功",courseMapper.selectByPrimaryKey(course.getId()));
         }
-        return ServerResponse.createByErrorMessage("更新渠道信息失败");
+        return ServerResponse.createByErrorMessage("更新课程信息失败");
     }
 
     private boolean lastUpdateUser(int id, int lastUpdateUser){

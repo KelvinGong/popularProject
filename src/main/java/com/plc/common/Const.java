@@ -47,9 +47,18 @@ public class Const {
     }
 
     public interface Role{
+        int ROLE_CTR_CC=2;
         int ROLE_CTR_MGR = 1; //中心管理员
         int ROLE_ADMIN = 0;//管理员
     }
+    public interface isRenewal{
+        int IS_RENEWAL_TRUE=1;
+        int IS_RENEWAL_FALSE = 0;
+
+        Float RENEWAL_RATE=0.125f;
+        Float NEW_RATE=0.025f;
+    }
+
 
     public enum ProductStatusEnum{
         ON_SALE(1,"在线");

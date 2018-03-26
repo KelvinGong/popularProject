@@ -27,4 +27,6 @@ public interface UserMapper {
     int checkPassword(@Param(value = "password") String password, @Param("userId") Integer userId);
 
     List<User> selectList();
+
+    List<User> selectRoleOfCtr(@Param("role") Integer role, @Param("centre")Integer centre);
 }

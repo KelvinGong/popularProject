@@ -8,6 +8,7 @@ import com.plc.common.ServerResponse;
 import com.plc.dao.CentreMapper;
 import com.plc.pojo.Centre;
 import com.plc.service.ICentreService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -101,5 +102,12 @@ public class CentreServiceImpl implements ICentreService{
         return ServerResponse.createByErrorMessage("更新中心信息失败");
     }
 
+    public String getCentreName(Integer id){
+        Centre selectCount=centreMapper.selectByPrimaryKey(id);
+        if(selectCount!=null){
+            return selectCount.getCentreCode();
+        }
+        return "not found";
+    }
 
 }

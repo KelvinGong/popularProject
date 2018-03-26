@@ -5,11 +5,11 @@ import java.util.Date;
 public class Sell {
     private Integer id;
 
-    private String ctrCode;
+    private Integer ctrCode;
 
     private Date payDate;
 
-    private String memberCode;
+    private Integer memberCode;
 
     private String contractCode;
 
@@ -53,7 +53,7 @@ public class Sell {
 
     private Date updateTime;
 
-    public Sell(Integer id, String ctrCode, Date payDate, String memberCode, String contractCode, String receptPosCode, String courseCode, Integer price, Integer status, String classCode, Boolean isRenewal, Boolean isShort, Date firstclassTime, Integer dayOfWeek, Integer cc1, Integer cc2, Integer ei, Integer ta, Integer ii, String remarks, Date pauseDate, Date graduateDate, Date refundDate, Date createTime, Date updateTime) {
+    public Sell(Integer id, Integer ctrCode, Date payDate, Integer memberCode, String contractCode, String receptPosCode, String courseCode, Integer price, Integer status, String classCode, Boolean isRenewal, Boolean isShort, Date firstclassTime, Integer dayOfWeek, Integer cc1, Integer cc2, Integer ei, Integer ta, Integer ii, String remarks, Date pauseDate, Date graduateDate, Date refundDate, Date createTime, Date updateTime) {
         this.id = id;
         this.ctrCode = ctrCode;
         this.payDate = payDate;
@@ -93,12 +93,12 @@ public class Sell {
         this.id = id;
     }
 
-    public String getCtrCode() {
+    public Integer getCtrCode() {
         return ctrCode;
     }
 
-    public void setCtrCode(String ctrCode) {
-        this.ctrCode = ctrCode == null ? null : ctrCode.trim();
+    public void setCtrCode(Integer ctrCode) {
+        this.ctrCode = ctrCode;
     }
 
     public Date getPayDate() {
@@ -109,12 +109,12 @@ public class Sell {
         this.payDate = payDate;
     }
 
-    public String getMemberCode() {
+    public Integer getMemberCode() {
         return memberCode;
     }
 
-    public void setMemberCode(String memberCode) {
-        this.memberCode = memberCode == null ? null : memberCode.trim();
+    public void setMemberCode(Integer memberCode) {
+        this.memberCode = memberCode;
     }
 
     public String getContractCode() {

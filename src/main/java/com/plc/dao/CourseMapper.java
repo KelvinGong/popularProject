@@ -1,6 +1,7 @@
 package com.plc.dao;
 
 import com.plc.pojo.Course;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -23,5 +24,5 @@ public interface CourseMapper {
 
     int checkCourseCode(String courseCode);
 
-    int updateLastUser(Integer id, Integer lastUpdateUser);
+    int updateLastUser(@Param("id") Integer id, @Param("lastUpdateUser") Integer lastUpdateUser);
 }

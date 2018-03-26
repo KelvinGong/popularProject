@@ -4,9 +4,9 @@
   <resultMap id="BaseResultMap" type="com.plc.pojo.Sell" >
     <constructor >
       <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="ctr_code" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="ctr_code" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="pay_date" jdbcType="DATE" javaType="java.util.Date" />
-      <arg column="member_code" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="member_code" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="contract_code" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="recept_pos_code" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="course_code" jdbcType="VARCHAR" javaType="java.lang.String" />
@@ -55,8 +55,8 @@
       remarks, pause_date, graduate_date, 
       refund_date, create_time, update_time
       )
-    values (#{id,jdbcType=INTEGER}, #{ctrCode,jdbcType=VARCHAR}, #{payDate,jdbcType=DATE}, 
-      #{memberCode,jdbcType=VARCHAR}, #{contractCode,jdbcType=VARCHAR}, #{receptPosCode,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{ctrCode,jdbcType=INTEGER}, #{payDate,jdbcType=DATE},
+      #{memberCode,jdbcType=INTEGER}, #{contractCode,jdbcType=VARCHAR}, #{receptPosCode,jdbcType=VARCHAR},
       #{courseCode,jdbcType=VARCHAR}, #{price,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
       #{classCode,jdbcType=VARCHAR}, #{isRenewal,jdbcType=BIT}, #{isShort,jdbcType=BIT}, 
       #{firstclassTime,jdbcType=TIMESTAMP}, #{dayOfWeek,jdbcType=INTEGER}, #{cc1,jdbcType=INTEGER}, 
@@ -149,13 +149,13 @@
         #{id,jdbcType=INTEGER},
       </if>
       <if test="ctrCode != null" >
-        #{ctrCode,jdbcType=VARCHAR},
+        #{ctrCode,jdbcType=INTEGER},
       </if>
       <if test="payDate != null" >
         #{payDate,jdbcType=DATE},
       </if>
       <if test="memberCode != null" >
-        #{memberCode,jdbcType=VARCHAR},
+        #{memberCode,jdbcType=INTEGER},
       </if>
       <if test="contractCode != null" >
         #{contractCode,jdbcType=VARCHAR},
@@ -226,13 +226,13 @@
     update plc_sell
     <set >
       <if test="ctrCode != null" >
-        ctr_code = #{ctrCode,jdbcType=VARCHAR},
+        ctr_code = #{ctrCode,jdbcType=INTEGER},
       </if>
       <if test="payDate != null" >
         pay_date = #{payDate,jdbcType=DATE},
       </if>
       <if test="memberCode != null" >
-        member_code = #{memberCode,jdbcType=VARCHAR},
+        member_code = #{memberCode,jdbcType=INTEGER},
       </if>
       <if test="contractCode != null" >
         contract_code = #{contractCode,jdbcType=VARCHAR},
@@ -291,20 +291,15 @@
       <if test="refundDate != null" >
         refund_date = #{refundDate,jdbcType=DATE},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
         update_time = now(),
-      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.plc.pojo.Sell" >
     update plc_sell
-    set ctr_code = #{ctrCode,jdbcType=VARCHAR},
+    set ctr_code = #{ctrCode,jdbcType=INTEGER},
       pay_date = #{payDate,jdbcType=DATE},
-      member_code = #{memberCode,jdbcType=VARCHAR},
+      member_code = #{memberCode,jdbcType=INTEGER},
       contract_code = #{contractCode,jdbcType=VARCHAR},
       recept_pos_code = #{receptPosCode,jdbcType=VARCHAR},
       course_code = #{courseCode,jdbcType=VARCHAR},
@@ -324,7 +319,6 @@
       pause_date = #{pauseDate,jdbcType=DATE},
       graduate_date = #{graduateDate,jdbcType=DATE},
       refund_date = #{refundDate,jdbcType=DATE},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>

@@ -23,4 +23,5 @@ public interface CentreMapper {
     List<Centre> selectActiveList();
 
     int checkCtrCode(String centreCode);
+
 }

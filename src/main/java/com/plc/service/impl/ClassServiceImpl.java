@@ -27,19 +27,35 @@ public class ClassServiceImpl implements IClassService {
      * @param pageSize
      * @return
      */
-    public ServerResponse<PageInfo> getClassList(int pageNum, int pageSize,int centreCode){
+    public ServerResponse<PageInfo> getClassList(int pageNum, int pageSize){
         //startPage--start
         //填充自己的sql查询逻辑
         //pageHelper-收尾
         PageHelper.startPage(pageNum,pageSize);
-        List<Class> courseList = classMapper.selectList(centreCode);
+        List<Class> classList = classMapper.selectList();
 
 /*        List<ProductListVo> productListVoList = Lists.newArrayList();
         for(Product productItem : productList){
             ProductListVo productListVo = assembleProductListVo(productItem);
             productListVoList.add(productListVo);
         }*/
-        PageInfo pageResult = new PageInfo(courseList);
+        PageInfo pageResult = new PageInfo(classList);
+        //pageResult.setList(productListVoList);
+        return ServerResponse.createBySuccess(pageResult);
+    }
+    public ServerResponse<PageInfo> getClassList(int pageNum, int pageSize,Integer centreCode){
+        //startPage--start
+        //填充自己的sql查询逻辑
+        //pageHelper-收尾
+        PageHelper.startPage(pageNum,pageSize);
+        List<Class> classList = classMapper.selectList(centreCode);
+
+/*        List<ProductListVo> productListVoList = Lists.newArrayList();
+        for(Product productItem : productList){
+            ProductListVo productListVo = assembleProductListVo(productItem);
+            productListVoList.add(productListVo);
+        }*/
+        PageInfo pageResult = new PageInfo(classList);
         //pageResult.setList(productListVoList);
         return ServerResponse.createBySuccess(pageResult);
     }
@@ -59,11 +75,12 @@ public class ClassServiceImpl implements IClassService {
             return validResponse;
         }
         classOB.setLastUpdateUser(currentUserId);
+
         int resultCount = classMapper.insert(classOB);
         if(resultCount == 0){
-            return ServerResponse.createByErrorMessage("添加课程失败");
+            return ServerResponse.createByErrorMessage("添加班级失败");
         }
-        return ServerResponse.createBySuccessMessage("添加课程成功");
+        return ServerResponse.createBySuccessMessage("添加班级成功");
     }
 
     /**
@@ -112,6 +129,7 @@ public class ClassServiceImpl implements IClassService {
         //校验成功,将新值写入
 
         updateClass.setCtrCode(classOB.getCtrCode());
+        updateClass.setCourseCode(classOB.getCourseCode());
         updateClass.setStatus(classOB.getStatus());
         updateClass.setFirstclassTime(classOB.getFirstclassTime());
         updateClass.setEndclassTime(classOB.getEndclassTime());
@@ -123,9 +141,9 @@ public class ClassServiceImpl implements IClassService {
 
         int updateCount = classMapper.updateByPrimaryKeySelective(updateClass);
         if(updateCount >0 && this.lastUpdateUser(classOB.getId(), currentUserId)){
-            return ServerResponse.createBySuccess("更新渠道信息成功",classMapper.selectByPrimaryKey(classOB.getId()));
+            return ServerResponse.createBySuccess("更新班级信息成功",classMapper.selectByPrimaryKey(classOB.getId()));
         }
-        return ServerResponse.createByErrorMessage("更新渠道信息失败");
+        return ServerResponse.createByErrorMessage("更新班级信息失败");
     }
 
     private boolean lastUpdateUser(int id, int lastUpdateUser){

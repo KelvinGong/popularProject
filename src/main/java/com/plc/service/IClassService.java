@@ -8,9 +8,12 @@ import com.plc.pojo.Class;
  * Created by gongkelvin on 2018/3/19.
  */
 public interface IClassService {
-    ServerResponse<PageInfo> getClassList(int pageNum, int pageSize, int centreCode);
 
-    ServerResponse getActiveClassList(Integer centreCode);
+    ServerResponse<PageInfo> getClassList(int pageNum, int pageSize);
+
+    ServerResponse<PageInfo> getClassList(int pageNum, int pageSize, Integer centreCode);
+
+    ServerResponse getActiveClassList(Integer ctrCode);
 
     ServerResponse<Class> updateClass(Class classOB, Integer currentUserId);
 

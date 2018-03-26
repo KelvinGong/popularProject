@@ -2,22 +2,30 @@ package com.plc.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import com.plc.common.Const;
 import com.plc.common.ResponseCode;
 import com.plc.common.ServerResponse;
 import com.plc.dao.MemberMapper;
 import com.plc.pojo.Member;
+import com.plc.service.ICentreService;
 import com.plc.service.IMemberService;
-import org.apache.commons.lang.enums.ValuedEnum;
+import com.plc.util.DateTimeUtil;
+import com.plc.util.PropertiesUtil;
+import com.plc.vo.MemberVo;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import static org.apache.commons.lang3.time.DateUtils.*;
 
 /**
  * Created by gongkelvin on 2018/3/15.
@@ -27,6 +35,9 @@ public class MemberServiceImpl implements IMemberService {
 
     @Autowired
     private MemberMapper memberMapper;
+
+    @Autowired
+    private ICentreService centreService;
 
 
 
@@ -38,7 +49,6 @@ public class MemberServiceImpl implements IMemberService {
                                                String orderByField,
                                                String orderBy
                                                ){
-
         //startPage--start
         //填充自己的sql查询逻辑
         //pageHelper-收尾
@@ -70,14 +80,60 @@ public class MemberServiceImpl implements IMemberService {
         }
         List<Member> memberList = memberMapper.selectByKeyword(centreCode,StringUtils.isBlank(keyword)?null:keyword,StringUtils.isBlank(field)?null:field);
 
+        List<MemberVo> memberVoList = Lists.newArrayList();
+        for(Member memberItem : memberList){
+            MemberVo memberVo = assembleMemberVo(memberItem);
+            memberVoList.add(memberVo);
+        }
+        PageInfo pageResult = new PageInfo(memberList);
+        pageResult.setList(memberVoList);
 
 
-        PageInfo pageInfo = new PageInfo(memberList);
+        //PageInfo pageInfo = new PageInfo(memberList);
         //pageInfo.setList(productListVoList);
-        return ServerResponse.createBySuccess(pageInfo);
-
+        return ServerResponse.createBySuccess(pageResult);
     }
 
+    private MemberVo assembleMemberVo(Member member){
+        MemberVo memberVo=new MemberVo();
+        memberVo.setId(member.getId());
+        memberVo.setMemberCode(member.getMemberCode());
+        memberVo.setMemName(member.getMemName());
+        memberVo.setNameEng(member.getNameEng());
+
+        //DateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd");
+        //String birthdayDate= dateFormat.format(member.getBirthday());
+        memberVo.setBirthday(DateTimeUtil.dateToStr(member.getBirthday(),"yyyy-MM-dd"));
+        memberVo.setAge(DateTimeUtil.getAgeByBirth(member.getBirthday()));
+
+        memberVo.setGender(member.getGender());
+        memberVo.setNameParents(member.getNameParents());
+        memberVo.setPhone(member.getPhone());
+        memberVo.setWechat(member.getWechat());
+        memberVo.setAddress(member.getAddress());
+
+        String centreCode=centreService.getCentreName(member.getCentre());
+        memberVo.setCentre(centreCode);
+
+        memberVo.setReferFrom(member.getReferFrom());
+        memberVo.setMarketing(member.getMarketing().toString());
+
+        memberVo.setRemarks(member.getRemarks());
+
+
+
+//        productDetailVo.setCreateTime(DateTimeUtil.dateToStr(product.getCreateTime()));
+//        productDetailVo.setUpdateTime(DateTimeUtil.dateToStr(product.getUpdateTime()));
+        return memberVo;
+    }
+
+    public ServerResponse<Member> selectById(Integer id){
+        Member tempMember= memberMapper.selectByPrimaryKey(id);
+        if(tempMember==null){
+            return ServerResponse.createByErrorMessage("参数错误(id未匹配)");
+        }
+        return ServerResponse.createBySuccess(tempMember);
+    }
 
     public ServerResponse<String> addMember(Member member){
         ServerResponse validResponse = this.checkValid(member.getMemberCode());

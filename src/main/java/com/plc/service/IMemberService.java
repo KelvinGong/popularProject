@@ -23,4 +23,5 @@ public interface IMemberService {
                                         String orderByField,
                                         String orderBy
     );
+    ServerResponse<Member> selectById(Integer id);
 }

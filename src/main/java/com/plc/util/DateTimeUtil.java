@@ -1,11 +1,14 @@
 package com.plc.util;
 
+import org.apache.commons.io.output.StringBuilderWriter;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by geely
@@ -49,6 +52,32 @@ public class DateTimeUtil {
     }
 
 
+    public static String getAgeByBirth(Date birthday){
+        Integer age=0;
+        Integer month = 0;
+        try {
+            Calendar now = Calendar.getInstance();
+            now.setTime(new Date());
+
+            Calendar birth = Calendar.getInstance();
+            birth.setTime(birthday);
+
+            if (birth.after(now)) {
+                age = 0;
+            } else {
+                age = now.get(Calendar.YEAR) - birth.get(Calendar.YEAR);
+                month = now.get(Calendar.MONTH) - birth.get(Calendar.MONTH);
+                if(month<0){
+                    month = month+12;
+                }
+            }
+            String ageStr=age.toString()+"岁"+month.toString()+"个月";
+            return ageStr;
+
+        }catch (Exception e){
+            return "N/A";
+        }
+    }
 
 
     public static void main(String[] args) {

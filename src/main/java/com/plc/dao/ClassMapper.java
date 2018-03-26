@@ -1,6 +1,7 @@
 package com.plc.dao;
 
 import com.plc.pojo.Class;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,11 +18,12 @@ public interface ClassMapper {
 
     int updateByPrimaryKey(Class record);
 
-    List<Class> selectList(int centreCode);
+    List<Class> selectList();
+    List<Class> selectList(@Param("ctrCode") Integer ctrCode);
 
-    List<Class> selectActiveList(int centreCode);
+    List<Class> selectActiveList( @Param("ctrCode") Integer ctrCode);
 
     int checkClassCode(String classCode);
 
-    int updateLastUser(Integer id, Integer lastUpdateUser);
+    int updateLastUser(@Param("id") Integer id, @Param("lastUpdateUser") Integer lastUpdateUser);
 }

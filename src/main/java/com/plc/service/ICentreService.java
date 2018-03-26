@@ -16,4 +16,6 @@ public interface ICentreService {
     ServerResponse<String> newCentre(Centre centre);
 
     ServerResponse<Centre> updateCentre(Centre centre);
+
+    String getCentreName(Integer id);
 }

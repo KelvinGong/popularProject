@@ -214,8 +214,8 @@
     <include refid="Base_Column_List"/>
     from plc_class
     <where>
-      <if test="centreCode != null">
-        AND  centreCode= #{centreCode}
+      <if test="ctrCode != null">
+        AND  ctr_code= #{ctrCode}
       </if>
     </where>
   </select>
@@ -224,8 +224,8 @@
     <include refid="Base_Column_List"/>
     from plc_class
     <where>
-      <if test="centreCode != null">
-        AND  centreCode= #{centreCode}
+      <if test="ctrCode != null">
+        AND  ctr_code= #{ctrCode}
       </if>
         AND status = 1
     </where>
