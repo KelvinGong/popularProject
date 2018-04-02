@@ -53,6 +53,17 @@ public class CentreController {
 
         return iCentreService.getActiveCentreList();
     }
+    @RequestMapping(value = "select_by_id.do",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse select_by_id(@RequestParam(value = "id") int id){
+/*        ServerResponse<User> response = iUserService.login(username,password);
+
+        if(response.isSuccess()){
+            session.setAttribute(Const.CURRENT_USER,response.getData());
+        }*/
+
+        return iCentreService.selectById(id);
+    }
 
     @RequestMapping(value = "new_centre.do",method = RequestMethod.GET)
     @ResponseBody

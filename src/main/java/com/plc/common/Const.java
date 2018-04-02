@@ -37,6 +37,18 @@ public class Const {
         Set<String> ORDER=Sets.newHashSet("asc","desc");
 
     }
+    public interface dateField{
+        Set<String> SELL_DATE_FIELD= Sets.newHashSet(
+                "pay_date",
+                "firstclass_time",
+                "pause_date",
+                "graduate_date",
+                "refund_date",
+                "create_time",
+                "update_time"
+        );
+
+    }
 
     public interface Cart{
         int CHECKED = 1;//即购物车选中状态

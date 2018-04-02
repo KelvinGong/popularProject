@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import com.plc.common.Const;
 import com.plc.common.ResponseCode;
 import com.plc.common.ServerResponse;
+import com.plc.dao.MarketingMapper;
 import com.plc.dao.MemberMapper;
 import com.plc.pojo.Member;
 import com.plc.service.ICentreService;
@@ -38,6 +39,9 @@ public class MemberServiceImpl implements IMemberService {
 
     @Autowired
     private ICentreService centreService;
+
+    @Autowired
+    private MarketingMapper marketingMapper;
 
 
 
@@ -116,7 +120,9 @@ public class MemberServiceImpl implements IMemberService {
         memberVo.setCentre(centreCode);
 
         memberVo.setReferFrom(member.getReferFrom());
-        memberVo.setMarketing(member.getMarketing().toString());
+
+        memberVo.setMarketing(marketingMapper.selectByPrimaryKey(member.getMarketing()).getMarketingName());
+        memberVo.setMarketingCode(member.getMarketing());
 
         memberVo.setRemarks(member.getRemarks());
 
@@ -127,12 +133,13 @@ public class MemberServiceImpl implements IMemberService {
         return memberVo;
     }
 
-    public ServerResponse<Member> selectById(Integer id){
+    public ServerResponse<MemberVo> selectById(Integer id){
         Member tempMember= memberMapper.selectByPrimaryKey(id);
         if(tempMember==null){
-            return ServerResponse.createByErrorMessage("参数错误(id未匹配)");
+            return ServerResponse.createByErrorMessage("参数错误(id未找到)");
         }
-        return ServerResponse.createBySuccess(tempMember);
+        MemberVo memberVo=assembleMemberVo(tempMember);
+        return ServerResponse.createBySuccess(memberVo);
     }
 
     public ServerResponse<String> addMember(Member member){

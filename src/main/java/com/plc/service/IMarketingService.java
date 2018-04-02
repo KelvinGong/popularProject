@@ -17,4 +17,6 @@ public interface IMarketingService {
 
     ServerResponse<String> addMarketing(Marketing marketing);
 
+    ServerResponse selectById(Integer id);
+
 }

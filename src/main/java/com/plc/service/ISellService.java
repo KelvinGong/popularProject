@@ -14,7 +14,10 @@ public interface ISellService {
                                       int pageNum,
                                       int pageSize,
                                       String orderByField,
-                                      String orderBy);
+                                      String orderBy,
+                                      String startDate,
+                                      String endDate,
+                                      String dateField);
 
     ServerResponse<String> addSell(Sell sell);
 

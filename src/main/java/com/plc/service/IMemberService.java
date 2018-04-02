@@ -3,6 +3,7 @@ package com.plc.service;
 import com.github.pagehelper.PageInfo;
 import com.plc.common.ServerResponse;
 import com.plc.pojo.Member;
+import com.plc.vo.MemberVo;
 
 import java.util.Date;
 
@@ -23,5 +24,6 @@ public interface IMemberService {
                                         String orderByField,
                                         String orderBy
     );
-    ServerResponse<Member> selectById(Integer id);
+
+    ServerResponse<MemberVo> selectById(Integer id);
 }

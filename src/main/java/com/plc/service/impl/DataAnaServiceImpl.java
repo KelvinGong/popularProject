@@ -13,6 +13,7 @@ import com.plc.service.IDataAnaService;
 import com.plc.vo.CcPerformanceVo;
 import com.plc.vo.DataAnaCCVo;
 import com.plc.vo.DataAnaCtrVo;
+import com.sun.org.apache.bcel.internal.generic.NEWARRAY;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class DataAnaServiceImpl implements IDataAnaService {
     private MemberMapper memberMapper;
 
 
-    public ServerResponse ccAna01(Integer centreCode){
+    public ServerResponse ccAna01(Integer centreCode,String startDate, String endDate, String dateField){
         List<User> ccOfCtr = userMapper.selectRoleOfCtr(Const.Role.ROLE_CTR_CC,centreCode);
         List<DataAnaCCVo> dataAnaCCVoList=Lists.newArrayList();
         float totalCtrTurnover=0.0f;
@@ -46,26 +47,32 @@ public class DataAnaServiceImpl implements IDataAnaService {
         for(User userItem :ccOfCtr){
             List<CcPerformanceVo> newSellVoList= Lists.newArrayList();
             List<CcPerformanceVo> renewalSellVoList = Lists.newArrayList();
-            List<Sell> sellListOfCc= sellMapper.selectByKeyword(centreCode,userItem.getId().toString(),"cc1");
-            sellListOfCc.add((Sell) sellMapper.selectByKeyword(centreCode,userItem.getId().toString(),"cc2"));
+            List<Sell> sellListOfCc= sellMapper.selectByKeyword(centreCode,userItem.getId().toString(),"cc1",startDate, endDate, dateField);
+            //sellListOfCc.add((Sell) sellMapper.selectByKeyword(centreCode,userItem.getId().toString(),"cc1"));
+            List<Sell> sellListOfCc2= sellMapper.selectByKeyword(centreCode,userItem.getId().toString(),"cc2",startDate, endDate, dateField);
+            for(Sell sellItem : sellListOfCc2){
+                sellListOfCc.add(sellItem);
+            }
             float newSubtotalTurnover=0.0f;
             float newSubtotalPerformance=0.0f;
             float renewalSubtotalTurnover=0.0f;
             float renewalSubtotalPerformance=0.0f;
             DataAnaCCVo dataAnaCCVo=new DataAnaCCVo();
-            float performanceRateF=getPerformanceRateF(newSubtotalTurnover);
+
 
             for(Sell sellItem:sellListOfCc){
 
-                if(sellItem.getIsRenewal().equals(Const.isRenewal.IS_RENEWAL_FALSE)){
-                    newSellVoList.add(assembleCcPerformanceVo(sellItem));
-                    newSubtotalTurnover += assembleCcPerformanceVo(sellItem).getTurnover();
+                if(sellItem.getIsRenewal()==false){
+                    CcPerformanceVo ccPerformanceVo=assembleCcPerformanceVo(sellItem,userItem.getStaffName());
+                    newSellVoList.add(ccPerformanceVo);
+                    newSubtotalTurnover += ccPerformanceVo.getTurnover();
                 }else{
-                    renewalSellVoList.add(assembleCcPerformanceVo(sellItem));
-                    renewalSubtotalTurnover += assembleCcPerformanceVo(sellItem).getTurnover();
+                    CcPerformanceVo ccPerformanceVo=assembleCcPerformanceVo(sellItem,userItem.getStaffName());
+                    renewalSellVoList.add(ccPerformanceVo);
+                    renewalSubtotalTurnover += ccPerformanceVo.getTurnover();
                 }
             }
-
+            float performanceRateF=getPerformanceRateF(newSubtotalTurnover);
 
             for(CcPerformanceVo ccPerformanceVoItem : newSellVoList){
                 ccPerformanceVoItem.setRateF(performanceRateF);
@@ -100,15 +107,16 @@ public class DataAnaServiceImpl implements IDataAnaService {
         return ServerResponse.createBySuccess(dataAnaCtrVo);
     }
 
-    private CcPerformanceVo assembleCcPerformanceVo(Sell sell){
+    private CcPerformanceVo assembleCcPerformanceVo(Sell sell,String ccName){
         CcPerformanceVo ccPerformanceVo=new CcPerformanceVo();
+        ccPerformanceVo.setCcName(ccName);
         ccPerformanceVo.setMemberName(memberMapper.selectByPrimaryKey(sell.getMemberCode()).getMemName());
         if(sell.getCc2()==null || sell.getCc1()==null){
             ccPerformanceVo.setTurnover(sell.getPrice());
         }else{
             ccPerformanceVo.setTurnover(sell.getPrice()/2);
         }
-        if(sell.getIsRenewal().equals(Const.isRenewal.IS_RENEWAL_TRUE)){
+        if(sell.getIsRenewal()==true){
             ccPerformanceVo.setRateA(Const.isRenewal.RENEWAL_RATE);
             ccPerformanceVo.setRateF(0.0f);
         }else{

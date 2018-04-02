@@ -21,8 +21,17 @@ public class MemberVo {
     private String referFrom;
     private String marketing;
     private String remarks;
+    private Integer marketingCode;
 
     private String age;
+
+    public Integer getMarketingCode() {
+        return marketingCode;
+    }
+
+    public void setMarketingCode(Integer marketingCode) {
+        this.marketingCode = marketingCode;
+    }
 
     public String getAge() {
         return age;

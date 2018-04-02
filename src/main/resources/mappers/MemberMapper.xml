@@ -42,7 +42,7 @@
       address, centre, refer_from, 
       marketing, remarks, create_time, 
       update_time)
-    values (#{id,jdbcType=INTEGER}, #{memberCode,jdbcType=VARCHAR}, #{memName,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{memberCode,jdbcType=VARCHAR}, #{memName,jdbcType=VARCHAR},
       #{nameEng,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, #{gender,jdbcType=CHAR}, 
       #{nameParents,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{wechat,jdbcType=VARCHAR}, 
       #{address,jdbcType=VARCHAR}, #{centre,jdbcType=INTEGER}, #{referFrom,jdbcType=VARCHAR},

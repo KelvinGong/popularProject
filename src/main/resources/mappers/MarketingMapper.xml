@@ -102,7 +102,7 @@
     <include refid="Base_Column_List"/>
     from plc_marketing
     WHERE status = 1
-    ORDER BY id asc
+    ORDER BY convert(marketing_name using gbk) collate gbk_chinese_ci
   </select>
   <select id="checkMarketingName" resultType="int" parameterType="string">
       select count(1) from plc_marketing

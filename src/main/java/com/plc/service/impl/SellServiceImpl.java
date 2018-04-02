@@ -2,16 +2,24 @@ package com.plc.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import com.plc.common.Const;
 import com.plc.common.ResponseCode;
 import com.plc.common.ServerResponse;
+import com.plc.dao.MemberMapper;
 import com.plc.dao.SellMapper;
+import com.plc.dao.UserMapper;
+import com.plc.pojo.Member;
 import com.plc.pojo.Sell;
 import com.plc.service.ISellService;
+import com.plc.util.DateTimeUtil;
+import com.plc.vo.MemberVo;
+import com.plc.vo.SellVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,20 +31,38 @@ public class SellServiceImpl implements ISellService {
 
     @Autowired
     private SellMapper sellMapper;
+    @Autowired
+    private MemberMapper memberMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     public ServerResponse<PageInfo> listSell(Integer centreCode,
-                                               String keyword,
-                                               String field,
-                                               int pageNum,
-                                               int pageSize,
-                                               String orderByField,
-                                               String orderBy){
+                                             String keyword,
+                                             String field,
+                                             int pageNum,
+                                             int pageSize,
+                                             String orderByField,
+                                             String orderBy,
+                                             String startDate,
+                                             String endDate,
+                                             String dateField){
         //startPage--start
         //填充自己的sql查询逻辑
         //pageHelper-收尾
 
         if(StringUtils.isNotBlank(keyword) &&  field== null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+        }
+        //时间模块校验
+        if(dateField!=null){
+            if(Const.dateField.SELL_DATE_FIELD.contains(dateField)){
+                if(DateTimeUtil.strToDate(startDate,"yyyy-MM-dd").getTime() > DateTimeUtil.strToDate(endDate,"yyyy-MM-dd").getTime()){
+                    return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+                }
+
+            }else{
+                return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(),ResponseCode.ILLEGAL_ARGUMENT.getDesc());
+            }
         }
         if(StringUtils.isBlank(keyword)&& field !=null){
             field=null;
@@ -60,13 +86,44 @@ public class SellServiceImpl implements ISellService {
         if(StringUtils.isNotBlank(keyword)){
             keyword = new StringBuilder().append("%").append(keyword).append("%").toString();
         }
-        List<Sell> sellList = sellMapper.selectByKeyword(centreCode,StringUtils.isBlank(keyword)?null:keyword,StringUtils.isBlank(field)?null:field);
-
+        List<Sell> sellList = sellMapper.selectByKeyword(centreCode,StringUtils.isBlank(keyword)?null:keyword,StringUtils.isBlank(field)?null:field,startDate,endDate,dateField);
+        List<SellVo> sellVoList = Lists.newArrayList();
+        for(Sell sellItem : sellList){
+            SellVo sellVo = assembleSellVo(sellItem);
+            sellVoList.add(sellVo);
+        }
         PageInfo pageInfo = new PageInfo(sellList);
-        //pageInfo.setList(productListVoList);
+        pageInfo.setList(sellVoList);
         return ServerResponse.createBySuccess(pageInfo);
     }
 
+    private SellVo assembleSellVo(Sell sell){
+
+
+        SellVo sellVo = new SellVo();
+        sellVo.setId(sell.getId());
+        sellVo.setPayDate(DateTimeUtil.dateToStr(sell.getPayDate(),"yyyy-MM-dd"));
+        sellVo.setMemberName(memberMapper.selectByPrimaryKey(sell.getMemberCode()).getMemName());
+        sellVo.setMemberCode(memberMapper.selectByPrimaryKey(sell.getMemberCode()).getMemberCode());
+        sellVo.setContractCode(sell.getContractCode());
+        sellVo.setReceptPosCode(sell.getReceptPosCode());
+        sellVo.setPrice(sell.getPrice().toString());
+        sellVo.set_classCode(sell.getClassCode());//// TODO: 2018/4/2 需要配置class
+        sellVo.setRenewal(sell.getIsRenewal());
+        sellVo.setShort(sell.getIsShort());
+        sellVo.setFirstclassTime(DateTimeUtil.dateToStr(sell.getFirstclassTime(),"yyyy-MM-dd"));
+        //sellVo.setDayOfWeek(sell.getDayOfWeek().toString());//// TODO: 2018/4/2
+        sellVo.setCc1(sell.getCc1()==null?null:userMapper.selectByPrimaryKey(sell.getCc1()).getStaffName());
+        sellVo.setCc2(sell.getCc2()==null?null:userMapper.selectByPrimaryKey(sell.getCc2()).getStaffName());
+        sellVo.setEi(sell.getEi()==null?null:userMapper.selectByPrimaryKey(sell.getEi()).getStaffName());
+        sellVo.setTa(sell.getTa()==null?null:userMapper.selectByPrimaryKey(sell.getTa()).getStaffName());
+        sellVo.setIi(sell.getIi()==null?null:userMapper.selectByPrimaryKey(sell.getIi()).getStaffName());
+        sellVo.setRemarks(sell.getRemarks());
+        sellVo.setPauseDate(DateTimeUtil.dateToStr(sell.getPauseDate(),"yyyy-MM-dd"));
+        sellVo.setGraduateDate(DateTimeUtil.dateToStr(sell.getGraduateDate(),"yyyy-MM-dd"));
+        sellVo.setRefundDate(DateTimeUtil.dateToStr(sell.getRefundDate(),"yyyy-MM-dd"));
+        return sellVo;
+    }
 
     public ServerResponse<String> addSell(Sell sell){
 /*        ServerResponse validResponse = this.checkValid(sell.getMemberCode());

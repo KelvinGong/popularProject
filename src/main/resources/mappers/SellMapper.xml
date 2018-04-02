@@ -331,7 +331,10 @@
         and ${field} LIKE #{keyword}
       </if>
       <if test="centreCode != 0" >
-        and centre = #{centreCode}
+        and ctr_code = #{centreCode}
+      </if>
+      <if test="dateField != null" >
+        and <![CDATA[   ${dateField} between  DATE_FORMAT(#{startDate}, '%Y-%m-%d')   and   DATE_FORMAT(#{endDate}, '%Y-%m-%d') ]]>
       </if>
     </where>
   </select>

@@ -65,6 +65,7 @@ public class MemberController {
         return iMemberService.selectById(id);
     }
 
+
     @RequestMapping(value = "add_member.do", method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse addMember(HttpSession session, Member member){

@@ -8,6 +8,7 @@ import com.plc.pojo.Marketing;
 import com.plc.service.IMarketingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.jvm.hotspot.oops.Mark;
 
 import java.util.List;
 import java.util.UUID;
@@ -51,6 +52,14 @@ public class MarketingServiceImpl implements IMarketingService {
     public ServerResponse getActiveMarketingList(){
         List<Marketing> marketingList = marketingMapper.selectActiveList();
         return ServerResponse.createBySuccess(marketingList);
+    }
+
+    public ServerResponse selectById(Integer id){
+        Marketing marketing=marketingMapper.selectByPrimaryKey(id);
+        if(marketing!=null){
+            return ServerResponse.createBySuccess(marketing);
+        }
+        return ServerResponse.createByErrorMessage("未找到");
     }
 
     public ServerResponse<String> addMarketing(Marketing marketing){

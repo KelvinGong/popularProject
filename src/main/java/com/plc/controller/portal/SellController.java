@@ -31,13 +31,17 @@ public class SellController {
 
     @RequestMapping(value = "list_sell.do",method = RequestMethod.GET)
     @ResponseBody
-    public ServerResponse listSell(HttpSession session, @RequestParam(value = "keyword",required = false)String keyword,
-                                     @RequestParam(value = "field",required = false)String field,
-                                     @RequestParam(value = "pageNum",defaultValue = "1")int pageNum,
-                                     @RequestParam(value = "pageSize",defaultValue = "10") int pageSize,
-                                     @RequestParam(value = "orderByField",defaultValue = "") String orderByField,
-                                     @RequestParam(value = "orderBy",defaultValue = "") String orderBy,
-                                     @RequestParam(value = "centreCode",required = false) Integer centreCode){
+    public ServerResponse listSell(HttpSession session,
+                                   @RequestParam(value = "keyword",required = false)String keyword,
+                                   @RequestParam(value = "field",required = false)String field,
+                                   @RequestParam(value = "pageNum",defaultValue = "1")int pageNum,
+                                   @RequestParam(value = "pageSize",defaultValue = "10") int pageSize,
+                                   @RequestParam(value = "orderByField",defaultValue = "") String orderByField,
+                                   @RequestParam(value = "orderBy",defaultValue = "") String orderBy,
+                                   @RequestParam(value = "dateField",required=false) String dateField,
+                                   @RequestParam(value = "startDate",required=false) String startDate,
+                                   @RequestParam(value = "endDate",required=false) String endDate,
+                                   @RequestParam(value = "centreCode",required = false) Integer centreCode){
         User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
         if(currentUser == null){
             return ServerResponse.createByErrorMessage("用户未登录");
@@ -45,12 +49,11 @@ public class SellController {
         if(iUserService.checkAdminRole(currentUser).isSuccess()){
             //填充我们增加产品的业务逻辑
             centreCode = centreCode==null?0:centreCode;
-
         }else{
             centreCode=currentUser.getCentre();
         }
 
-        return iSellService.listSell(centreCode,keyword, field, pageNum, pageSize, orderByField, orderBy);
+        return iSellService.listSell(centreCode,keyword, field, pageNum, pageSize, orderByField, orderBy,startDate,endDate,dateField);
     }
 
     @RequestMapping(value = "add_sell.do", method = RequestMethod.GET)

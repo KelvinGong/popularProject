@@ -53,6 +53,18 @@ public class MarketingController {
         return iMarketingService.getActiveMarketingList();
     }
 
+    @RequestMapping(value = "select_by_id.do",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse select_by_id(@RequestParam(value = "id") int id){
+/*        ServerResponse<User> response = iUserService.login(username,password);
+
+        if(response.isSuccess()){
+            session.setAttribute(Const.CURRENT_USER,response.getData());
+        }*/
+
+        return iMarketingService.selectById(id);
+    }
+
     @RequestMapping(value = "add_marketing.do",method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse addMarketing(HttpSession session, Marketing marketing){

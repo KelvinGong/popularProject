@@ -55,6 +55,13 @@ public class CentreServiceImpl implements ICentreService{
         return ServerResponse.createBySuccess(centreList);
     }
 
+    public ServerResponse selectById(Integer id){
+        Centre centre = centreMapper.selectByPrimaryKey(id);
+        if(centre!= null){
+            return ServerResponse.createBySuccess(centre);
+        }
+        return ServerResponse.createByErrorMessage("未找到");
+    }
 
     public ServerResponse<String> newCentre(Centre centre){
         ServerResponse validResponse = this.checkValid(centre.getCentreCode());

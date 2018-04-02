@@ -18,7 +18,8 @@ public interface SellMapper {
 
     int updateByPrimaryKey(Sell record);
 
-    List<Sell> selectByKeyword(@Param("centreCode") int centreCode, @Param("keyword") String keyword, @Param("field")String field);
+    List<Sell> selectByKeyword(@Param("centreCode") int centreCode, @Param("keyword") String keyword, @Param("field")String field, @Param("startDate")String startDate,@Param("endDate") String endDate , @Param("dateField") String dateField);
+
 
 
 }
