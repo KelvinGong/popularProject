@@ -56,6 +56,16 @@ public class SellController {
         return iSellService.listSell(centreCode,keyword, field, pageNum, pageSize, orderByField, orderBy,startDate,endDate,dateField);
     }
 
+    @RequestMapping(value = "select_member.do",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse listMember(HttpSession session,@RequestParam(value = "id",required = false)Integer id){
+        User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
+        if(currentUser == null){
+            return ServerResponse.createByErrorMessage("用户未登录");
+        }
+        return iSellService.selectById(id);
+    }
+
     @RequestMapping(value = "add_sell.do", method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse addSell(HttpSession session, Sell sell){

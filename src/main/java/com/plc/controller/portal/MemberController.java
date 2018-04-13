@@ -55,6 +55,24 @@ public class MemberController {
         return iMemberService.listMember(centreCode,keyword, field, pageNum, pageSize, orderByField, orderBy);
     }
 
+    @RequestMapping(value = "list_member_ByCtr.do",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse listMemberByCtr(HttpSession session, @RequestParam(value = "centreCode",required = false) Integer centreCode){
+        User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
+        if(currentUser == null){
+            return ServerResponse.createByErrorMessage("用户未登录");
+        }
+        if(iUserService.checkAdminRole(currentUser).isSuccess()){
+            //填充我们增加产品的业务逻辑
+            centreCode = centreCode==null?1:centreCode;
+
+        }else{
+            centreCode=currentUser.getCentre();
+        }
+
+        return iMemberService.listMemberByCentre(centreCode);
+    }
+
     @RequestMapping(value = "select_member.do",method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse listMember(HttpSession session,@RequestParam(value = "id",required = false)Integer id){

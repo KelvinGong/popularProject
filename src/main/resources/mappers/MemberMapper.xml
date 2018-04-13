@@ -222,11 +222,12 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="selectListAll" resultMap="BaseResultMap" >
+  <select id="selectListAll" resultMap="BaseResultMap" parameterType="java.lang.Integer">
     SELECT
     <include refid="Base_Column_List"/>
-    from plc_centre
-    ORDER BY id asc
+    from plc_member
+    WHERE centre = #{centreCode}
+    ORDER BY convert(mem_name using gbk) collate gbk_chinese_ci
   </select>
   <select id="checkMemberCode" resultType="int" parameterType="string">
     select count(1) from plc_member

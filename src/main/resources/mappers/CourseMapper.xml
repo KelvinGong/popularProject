@@ -137,7 +137,7 @@
   <select id="selectActiveList" resultMap="BaseResultMap">
     SELECT
     <include refid="Base_Column_List"/>
-    from plc_cour  se
+    from plc_course
     WHERE status = 1
     ORDER BY id asc
   </select>

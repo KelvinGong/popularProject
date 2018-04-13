@@ -18,7 +18,7 @@ public interface MemberMapper {
 
     int updateByPrimaryKey(Member record);
 
-    List<Member> selectListAll();
+    List<Member> selectListAll(@Param("centreCode") Integer centreCode);
 
     int checkMemberCode(String memberCode);
 

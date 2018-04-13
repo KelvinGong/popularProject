@@ -26,4 +26,5 @@ public interface IMemberService {
     );
 
     ServerResponse<MemberVo> selectById(Integer id);
+    ServerResponse listMemberByCentre(Integer centreCode);
 }

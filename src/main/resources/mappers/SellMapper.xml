@@ -9,7 +9,7 @@
       <arg column="member_code" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="contract_code" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="recept_pos_code" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="course_code" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="course_code" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="price" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="status" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="class_code" jdbcType="VARCHAR" javaType="java.lang.String" />
@@ -57,7 +57,7 @@
       )
     values (#{id,jdbcType=INTEGER}, #{ctrCode,jdbcType=INTEGER}, #{payDate,jdbcType=DATE},
       #{memberCode,jdbcType=INTEGER}, #{contractCode,jdbcType=VARCHAR}, #{receptPosCode,jdbcType=VARCHAR},
-      #{courseCode,jdbcType=VARCHAR}, #{price,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+      #{courseCode,jdbcType=INTEGER}, #{price,jdbcType=INTEGER}, #{status,jdbcType=INTEGER},
       #{classCode,jdbcType=VARCHAR}, #{isRenewal,jdbcType=BIT}, #{isShort,jdbcType=BIT}, 
       #{firstclassTime,jdbcType=TIMESTAMP}, #{dayOfWeek,jdbcType=INTEGER}, #{cc1,jdbcType=INTEGER}, 
       #{cc2,jdbcType=INTEGER}, #{ei,jdbcType=INTEGER}, #{ta,jdbcType=INTEGER}, #{ii,jdbcType=INTEGER}, 
@@ -164,7 +164,7 @@
         #{receptPosCode,jdbcType=VARCHAR},
       </if>
       <if test="courseCode != null" >
-        #{courseCode,jdbcType=VARCHAR},
+        #{courseCode,jdbcType=INTEGER},
       </if>
       <if test="price != null" >
         #{price,jdbcType=INTEGER},
@@ -241,7 +241,7 @@
         recept_pos_code = #{receptPosCode,jdbcType=VARCHAR},
       </if>
       <if test="courseCode != null" >
-        course_code = #{courseCode,jdbcType=VARCHAR},
+        course_code = #{courseCode,jdbcType=INTEGER},
       </if>
       <if test="price != null" >
         price = #{price,jdbcType=INTEGER},
@@ -302,7 +302,7 @@
       member_code = #{memberCode,jdbcType=INTEGER},
       contract_code = #{contractCode,jdbcType=VARCHAR},
       recept_pos_code = #{receptPosCode,jdbcType=VARCHAR},
-      course_code = #{courseCode,jdbcType=VARCHAR},
+      course_code = #{courseCode,jdbcType=INTEGER},
       price = #{price,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
       class_code = #{classCode,jdbcType=VARCHAR},

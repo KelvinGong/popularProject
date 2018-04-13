@@ -6,9 +6,11 @@ import com.google.common.collect.Lists;
 import com.plc.common.Const;
 import com.plc.common.ResponseCode;
 import com.plc.common.ServerResponse;
+import com.plc.dao.CourseMapper;
 import com.plc.dao.MemberMapper;
 import com.plc.dao.SellMapper;
 import com.plc.dao.UserMapper;
+import com.plc.pojo.Course;
 import com.plc.pojo.Member;
 import com.plc.pojo.Sell;
 import com.plc.service.ISellService;
@@ -35,6 +37,8 @@ public class SellServiceImpl implements ISellService {
     private MemberMapper memberMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private CourseMapper courseMapper;
 
     public ServerResponse<PageInfo> listSell(Integer centreCode,
                                              String keyword,
@@ -97,6 +101,15 @@ public class SellServiceImpl implements ISellService {
         return ServerResponse.createBySuccess(pageInfo);
     }
 
+    public ServerResponse<SellVo> selectById(Integer id){
+        Sell tempSell= sellMapper.selectByPrimaryKey(id);
+        if(tempSell==null){
+            return ServerResponse.createByErrorMessage("参数错误(id未找到)");
+        }
+        SellVo sellVo=assembleSellVo(tempSell);
+        return ServerResponse.createBySuccess(sellVo);
+    }
+
     private SellVo assembleSellVo(Sell sell){
 
 
@@ -107,6 +120,7 @@ public class SellServiceImpl implements ISellService {
         sellVo.setMemberCode(memberMapper.selectByPrimaryKey(sell.getMemberCode()).getMemberCode());
         sellVo.setContractCode(sell.getContractCode());
         sellVo.setReceptPosCode(sell.getReceptPosCode());
+        sellVo.setCourseCode(courseMapper.selectByPrimaryKey(sell.getCourseCode()).getCourseCode());
         sellVo.setPrice(sell.getPrice().toString());
         sellVo.set_classCode(sell.getClassCode());//// TODO: 2018/4/2 需要配置class
         sellVo.setRenewal(sell.getIsRenewal());

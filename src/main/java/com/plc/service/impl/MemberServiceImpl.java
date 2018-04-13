@@ -142,6 +142,12 @@ public class MemberServiceImpl implements IMemberService {
         return ServerResponse.createBySuccess(memberVo);
     }
 
+    public ServerResponse listMemberByCentre(Integer centreCode){
+        List<Member> memberList = memberMapper.selectListAll(centreCode);
+
+        return ServerResponse.createBySuccess(memberList);
+    }
+
     public ServerResponse<String> addMember(Member member){
         ServerResponse validResponse = this.checkValid(member.getMemberCode());
         if(!validResponse.isSuccess()){

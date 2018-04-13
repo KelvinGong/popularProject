@@ -4,6 +4,8 @@ import com.github.pagehelper.PageInfo;
 import com.plc.common.ServerResponse;
 import com.plc.pojo.User;
 
+import java.util.List;
+
 /**
  * Created by geely
  */
@@ -30,6 +32,6 @@ public interface IUserService {
     ServerResponse checkAdminRole(User user);
 
     ServerResponse<PageInfo> getInformationList(int pageNum, int pageSize);
-
     ServerResponse<String> resetPasswordByAdmin(String passwordNew,User user);
+    ServerResponse listUser(Integer role, Integer centre);
 }

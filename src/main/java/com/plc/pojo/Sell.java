@@ -15,7 +15,7 @@ public class Sell {
 
     private String receptPosCode;
 
-    private String courseCode;
+    private Integer courseCode;
 
     private Integer price;
 
@@ -53,7 +53,7 @@ public class Sell {
 
     private Date updateTime;
 
-    public Sell(Integer id, Integer ctrCode, Date payDate, Integer memberCode, String contractCode, String receptPosCode, String courseCode, Integer price, Integer status, String classCode, Boolean isRenewal, Boolean isShort, Date firstclassTime, Integer dayOfWeek, Integer cc1, Integer cc2, Integer ei, Integer ta, Integer ii, String remarks, Date pauseDate, Date graduateDate, Date refundDate, Date createTime, Date updateTime) {
+    public Sell(Integer id, Integer ctrCode, Date payDate, Integer memberCode, String contractCode, String receptPosCode, Integer courseCode, Integer price, Integer status, String classCode, Boolean isRenewal, Boolean isShort, Date firstclassTime, Integer dayOfWeek, Integer cc1, Integer cc2, Integer ei, Integer ta, Integer ii, String remarks, Date pauseDate, Date graduateDate, Date refundDate, Date createTime, Date updateTime) {
         this.id = id;
         this.ctrCode = ctrCode;
         this.payDate = payDate;
@@ -133,12 +133,12 @@ public class Sell {
         this.receptPosCode = receptPosCode == null ? null : receptPosCode.trim();
     }
 
-    public String getCourseCode() {
+    public Integer getCourseCode() {
         return courseCode;
     }
 
-    public void setCourseCode(String courseCode) {
-        this.courseCode = courseCode == null ? null : courseCode.trim();
+    public void setCourseCode(Integer courseCode) {
+        this.courseCode = courseCode;
     }
 
     public Integer getPrice() {

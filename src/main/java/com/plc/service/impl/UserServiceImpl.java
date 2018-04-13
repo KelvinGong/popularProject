@@ -2,6 +2,7 @@ package com.plc.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import com.plc.common.Const;
 import com.plc.common.ServerResponse;
 import com.plc.common.TokenCache;
@@ -27,6 +28,14 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private UserMapper userMapper;
 
+
+    public ServerResponse listUser(Integer role,Integer centre){
+        List<User> userList= userMapper.selectRoleOfCtr(role,centre);
+        for(User useritem:userList){
+            useritem.setPassword(org.apache.commons.lang3.StringUtils.EMPTY);
+        }
+        return ServerResponse.createBySuccess(userList);
+    }
 
     @Override
     public ServerResponse<User> login(String username, String password) {

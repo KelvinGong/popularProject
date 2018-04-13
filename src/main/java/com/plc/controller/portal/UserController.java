@@ -28,6 +28,25 @@ public class UserController {
     private IUserService iUserService;
 
 
+
+    @RequestMapping(value = "list_user.do",method = RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse<User> listUser(HttpSession session,Integer role){
+        User currentUser = (User)session.getAttribute(Const.CURRENT_USER);
+        if(currentUser == null){
+            return ServerResponse.createByErrorMessage("用户未登录");
+        }
+
+        //判断是否为管理员,若不是管理员则取自己所在中心
+        Integer centreCode;
+        if(iUserService.checkAdminRole(currentUser).isSuccess()){
+            //填充我们增加产品的业务逻辑
+            centreCode =1; // TODO: 2018/4/4 需要填充用户是管理员时的逻辑
+        }else{
+            centreCode=currentUser.getCentre();
+        }
+        return iUserService.listUser(role,centreCode);
+    }
     /**
      * 用户登录
      * @param username
